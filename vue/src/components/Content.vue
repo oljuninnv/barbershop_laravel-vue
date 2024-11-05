@@ -54,7 +54,7 @@
         <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
             <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/vzroslay.svg" alt="Взрослая стрижка" />
             <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Взрослая стрижка</h5>
+                <h5 class="mb-2 text-xl font-medium leading-tight">Мужская стрижка</h5>
                 <div class="text-[18px]">1500 Руб</div>
             </div>
         </div>
@@ -62,8 +62,8 @@
         <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
             <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/kids.svg" alt="Детская стрижка" />
             <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Детская стрижка</h5>
-                <div class="text-[18px]">1200 Руб</div>
+                <h5 class="mb-2 text-xl font-medium leading-tight">Укладка причёски</h5>
+                <div class="text-[18px]">1000 Руб</div>
             </div>
         </div>
 

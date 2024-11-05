@@ -15,10 +15,10 @@
                 name="username"
                 type="text"
                 v-model="username"
-                @input="validateUsername"
+                
                 autocomplete="username"
                 required
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                class="input_text"
                 />
                 <span v-if="errorMessageLogin" class="text-red-500">{{ errorMessageLogin }}</span>          
             </div>
@@ -33,9 +33,9 @@
                 name="phone"
                 type="tel"
                 v-model="phone"
-                @input="validatePhone"
+                
                 required
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                class="input_text"
             />
             <span v-if="errorMessagePhone" class="text-red-500">{{ errorMessagePhone }}</span>          
         </div>
@@ -44,7 +44,7 @@
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email-адрес</label>
           <div class="mt-2">
-            <input id="email" name="email" type="email" autocomplete="email" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+            <input id="email" name="email" type="email" autocomplete="email" required="" class="input_text" />
           </div>
         </div>
 
@@ -58,10 +58,10 @@
                     name="password"
                     type="password"
                     v-model="password"
-                    @input="validatePassword"
+                    
                     autocomplete="current-password"
                     required
-                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    class="input_text"
                 />
                 <span v-if="errorMessagePassword" class="text-red-500">{{ errorMessagePassword }}</span>          
             </div>
@@ -70,7 +70,19 @@
         <div>
           <button type="submit" class="flex w-full justify-center rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-neutral-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Зарегитрироваться</button>
         </div>
-      </form>      
+      </form> 
+      <p class="mt-10 text-center text-sm text-gray-500">
+          Уже зарегистрированы?
+          {{ ' ' }}
+          <router-link class="font-semibold leading-6 text-red-600 hover:text-neutral-400" to="/login">Войти</router-link>
+        </p> 
+        
+        <div class="absolute top-4 left-4 flex items-center">
+          <router-link to="/" class="return flex items-center text-black text-lg">
+              <span class="mr-2 w-5 h-5 bg-no-repeat bg-left-center bg-contain" style="background-image: url('../public/return.png');"></span>
+              Назад
+          </router-link>
+      </div>
     </div>
   </div>
 </template>

@@ -38,6 +38,7 @@ class AuthController extends Controller
             // Создание нового пользователя
             $user = new User;
             $user->name = $values['name'];
+            $user->login = $values['login'];
             $user->email = $values['email'];
             $user->phone = $values['phone'];
             $user->city = $values['city'];

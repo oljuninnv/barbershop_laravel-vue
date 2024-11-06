@@ -36,6 +36,8 @@
           <div class="flex flex-col">
             <input type="text" v-model="userName" :disabled="!isEditing" class="mb-2 p-2 border rounded"
               placeholder="Имя" />
+              <input type="text" v-model="userLogin" :disabled="!isEditing" class="mb-2 p-2 border rounded"
+              placeholder="Login" />
             <input type="text" v-model="userEmail" :disabled="!isEditing" class="mb-2 p-2 border rounded"
               placeholder="Email" />
             <input type="text" v-model="userPhone" :disabled="!isEditing" class="mb-2 p-2 border rounded"
@@ -101,6 +103,7 @@ const userEmail = ref('example@example.com');
 const userRole = ref('Гость');
 const userPhone = ref('89069081178');
 const userCity = ref('Кемерово');
+const userLogin = ref('User');
 
 const appointments = ref([
   { date: '2024-11-05', time: '20:00', service: 'Стрижка', price: 1000, master: 'Константин Назаров', active: true },

@@ -43,6 +43,7 @@
     <div v-if="activeTab === 'profile'">
       <div class="flex flex-col">
         <input type="text" v-model="userName" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Имя" />
+        <input type="text" v-model="userLogin" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Login" />
         <input type="email" v-model="userEmail" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Email" />
         <input type="text" v-model="userPhone" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Телефон" />
         <input type="file" v-if="isEditing" @change="handleFileUpload" class="mb-2" />
@@ -126,6 +127,7 @@ const isEditing = ref(false); // Состояние редактирования
 const userName = ref('Константин Назаров');
 const userEmail = ref('example@example.com');
 const userPhone = ref('89049562211');
+const userLogin = ref('barber');
 
 const times = ['9:00', '10:40', '12:40', '14:20', '16:00', '17:40', '18:20', '19:50'];
 const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];

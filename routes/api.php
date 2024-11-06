@@ -3,6 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkerController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\PostController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,3 +25,31 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('auth/register', [AuthController::class,'register']);
 Route::post('auth/login', [AuthController::class,'login']);
+
+//UserController
+
+Route::get('/get_users',[UserController::class,'index']);
+Route::get('/get_visitor_users',[UserController::class,'getNonWorkers']);
+Route::get('/get_worker_users',[UserController::class,'getWorkers']);
+Route::get('/get_user/{id}',[UserController::class,'show']);
+Route::post('/add_user',[UserController::class,'store']);
+Route::put('/update_post/{id}',[UserController::class,'update']);
+Route::delete('/delete_post/{id}',[UserController::class,'destroy']);
+
+//PostController
+
+Route::get('/get_posts',[PostController::class,'index']);
+Route::get('/get_post/{id}',[PostController::class,'show']);
+Route::post('/add_post',[PostController::class,'store']);
+Route::put('/update_post/{id}',[PostController::class,'update']);
+Route::delete('/delete_post/{id}',[PostController::class,'destroy']);
+
+//ServiceController
+
+Route::get('/get_services',[ServiceController::class,'index']);
+Route::get('/get_service/{id}',[ServiceController::class,'show']);
+Route::post('/add_service',[ServiceController::class,'store']);
+Route::put('/update_service/{id}',[ServiceController::class,'update']);
+Route::delete('/delete_service/{id}',[ServiceController::class,'destroy']);
+
+//WorkerController

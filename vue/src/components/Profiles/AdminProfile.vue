@@ -10,6 +10,7 @@
         <div class="mt-16 flex flex-col items-center">
           <h4 class="text-bluePrimary text-xl font-bold text-center">{{ userName }}</h4>
           <p class="text-lightSecondary text-base font-normal text-center">Admin</p>
+          <p class="text-lightSecondary text-base font-normal text-center">Login: {{ userLogin }}</p>
           <p class="text-lightSecondary text-base font-normal text-center">Email: {{ userEmail }}</p>
           <p class="text-lightSecondary text-base font-normal text-center">Телефон: {{ userPhone }}</p>
         </div>
@@ -25,6 +26,7 @@
   
   const userName = ref('Константин Назаров');
   const userEmail = ref('example@example.com');
+  const userLogin = ref('admin');
   const userRole = ref('Гость');
   const userPhone = ref('89069081178');
   

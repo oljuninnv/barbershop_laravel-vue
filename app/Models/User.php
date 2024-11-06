@@ -12,15 +12,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'phone', 'email', 'city', 'birthday', 'image'];
+    protected $fillable = ['login','name', 'phone', 'email', 'city', 'birthday', 'image'];
 
     protected $hidden = [
         'password'
     ];
 
-    public function workers()
-    {
-        return $this->hasMany(Worker::class);
+    public function worker() {
+        return $this->belongsTo(Worker::class, 'id', 'user_id');
     }
 
     public function records()

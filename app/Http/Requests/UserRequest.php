@@ -1,16 +1,25 @@
 <?php
 
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-class RegisterRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
-     * Получить правила валидации для запроса.
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules()
     {
@@ -18,7 +27,6 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'login' => 'required|string|unique:users,login',
-            'password' => 'required|string|min:6',
             'city' => 'required|string|max:255',
             'phone' => 'required|phone',
             'birthday' => 'required|date_format:Y-m-d',
@@ -26,25 +34,6 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    /**
-     * Обработка неудачной валидации.
-     *
-     * @param \Illuminate\Contracts\Validation\Validator $validator
-     * @return void
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        throw new ValidationException($validator, response()->json([
-            'error' => 'Ошибка в заполнении данных.',
-            'messages' => $validator->errors(),
-        ], 422)); // Изменен код на 422 для валидационных ошибок
-    }
-
-    /**
-     * Сообщения об ошибках валидации.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [
@@ -56,8 +45,6 @@ class RegisterRequest extends FormRequest
             'email.required' => 'Email является обязательным полем.',
             'email.email' => 'Некорректный формат email.',
             'email.unique' => 'Пользователь с таким email уже существует.',
-            'password.required' => 'Пароль является обязательным полем.',
-            'password.min' => 'Пароль должен содержать минимум 6 символов.',
             'city.required' => 'Город является обязательным полем.',
             'phone.required' => 'Номер телефона является обязательным полем.',
             'phone.phone' => 'Не верный формат ввода номера телефона',
@@ -66,13 +53,11 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    /**
-     * Разрешить запрос.
-     *
-     * @return bool
-     */
-    public function authorize()
+    protected function failedValidation(Validator $validator)
     {
-        return true;
+        throw new ValidationException($validator, response()->json([
+            'error' => 'Ошибка в заполнении данных.',
+            'messages' => $validator->errors(),
+        ], 422)); // Изменен код на 422 для валидационных ошибок
     }
 }

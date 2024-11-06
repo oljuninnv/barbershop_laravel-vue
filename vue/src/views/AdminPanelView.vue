@@ -78,6 +78,12 @@
                         <span>Записи</span>
                     </a>
                 </li>
+                <li>
+                    <a href="#" @click.prevent="showTable('posts')"
+                        class="flex items-center space-x-3 text-gray-900 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                        <span>Должности</span>
+                    </a>
+                </li>
                 <hr>
                 <li>
                     <a href="#" @click.prevent="showTable('generate_records')"

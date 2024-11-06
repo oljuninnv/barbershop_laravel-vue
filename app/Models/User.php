@@ -6,13 +6,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'phone', 'email', 'city', 'birthday', 'image', 'password'];
+    protected $fillable = ['name', 'phone', 'email', 'city', 'birthday', 'image'];
+
+    protected $hidden = [
+        'password'
+    ];
 
     public function workers()
     {

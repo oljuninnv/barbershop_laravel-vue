@@ -45,4 +45,80 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return $this->stockResponse($e, 'Неправильный метод',$request,405);
+        }
+        if ($e instanceof NotFoundHttpException || $e instanceof ModelNotFoundException) {
+            return $this->stockResponse($e, 'Не найдено',$request,status: 404);
+        }
+        if ($e instanceof AuthenticationException) {
+            return $this->unauthenticated($request,$e);
+        }
+
+        if (in_array($request->segment(1), ['api'])) {
+            //
+            $message = $e->getMessage();
+            $status = 500;
+            $headers = [];
+
+            if ($e instanceof ValidationException) {
+                $message = 'Неправильные аргументы.';
+                foreach ($e->errors() as $error) {
+                    $message .= ' ' . implode(' ', $error);
+                }
+                return $this->stockResponse($e, $message, $request, 400, $e->errors());
+            }
+
+            if ($e instanceof MethodNotAllowedHttpException) {
+                return $this->stockResponse($e, 'Неправильный метод',$request,405);
+            }
+            if ($e instanceof NotFoundHttpException || $e instanceof ModelNotFoundException) {
+                return $this->stockResponse($e, 'Не найдено',$request,404);
+            }
+
+            if ($e instanceof AuthenticationException) {
+                return $this->unauthenticated($request,$e);
+            }
+
+            if ($e instanceof HttpException) {
+                return $this->stockResponse($e, $e->getMessage(),$request,$e->getStatusCode())->withHeaders($e->getHeaders());
+            }
+
+            // $response = response()->json([
+            //     'status' => 'error',
+            //     'message' => $message,
+            //     'input' => $request->all(),
+            // ], $status);
+            // foreach ($headers as $header => $value) {
+            //     $response->header($header,$value);
+            // }
+
+            // return $response;
+
+        }
+
+
+        return parent::render($request, $e);
+    }
+    protected function unauthenticated($request, $exception)
+    {
+        return response()->json([
+                "error"=>"access_denied",
+                "error_description"=>"The resource owner or authorization server denied the request."
+        ],401);
+    }
+
+
+    public function stockResponse($e,$message,$request,$status = 500, $errors = [])
+    {
+        return response()->json([
+            'status' => 'error',
+            'message' => $message,
+            'errors' => $errors,
+            'input' => $request->all(),
+        ], $status);
+    }
 }

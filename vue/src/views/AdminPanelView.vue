@@ -1,6 +1,6 @@
 <template>
-    <div v-if="isAdmin" class="flex flex-wrap bg-gray-100 w-full h-screen">
-        <div class="bg-white rounded p-3 shadow-lg w-full md:w-3/12 lg:w-2/12">
+    <div v-if="isAdmin" class="flex flex-wrap bg-gray-100 w-full h-full">
+        <div class="bg-white rounded p-3 shadow-lg w-full md:w-3/12 lg:w-2/12 min-h-screen">
             <div class="flex items-center space-x-4 p-2 mb-5">
                 <h4 class="font-semibold text-lg text-gray-700 capitalize font-poppins tracking-wide">AdminPanel</h4>
             </div>
@@ -21,13 +21,18 @@
                     <ul v-if="isDropdownVisible" id="dropdown-example" class="py-2 space-y-2">
                         <li>
                             <a href="#"
-                                class="flex items-center font-medium w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                class="flex items-center w-full font-medium p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline dark:text-white dark:hover:bg-gray-700"
+                                @click.prevent="showTable('add_visitors')">Добавить пользователя</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="flex items-center font-medium w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline dark:text-white dark:hover:bg-gray-700"
                                 @click.prevent="showTable('visitors')">Посетители</a>
                         </li>
                         <li>
                             <a href="#"
-                                class="flex items-center w-full font-medium p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                @click.prevent="showTable('visitors')">Работники</a>
+                                class="flex items-center w-full font-medium p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline dark:text-white dark:hover:bg-gray-700"
+                                @click.prevent="showTable('worker_visitors')">Работники</a>
                         </li>
                     </ul>
                 </li>
@@ -45,15 +50,19 @@
                     <ul v-if="isStaffMenuVisible" class="py-2 space-y-2 pl-4">
                         <li>
                             <a href="#" @click.prevent="showTable('administrators')"
-                                class="block px-4 py-2 font-medium text-gray-900 hover:bg-gray-200">Администраторы</a>
+                                class="block px-4 py-2 font-medium text-gray-900 rounded-lg hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">Администраторы</a>
                         </li>
                         <li>
                             <a href="#" @click.prevent="showTable('barbers')"
-                                class="block px-4 py-2 font-medium text-gray-900 hover:bg-gray-200">Барберы</a>
+                                class="block px-4 py-2 font-medium rounded-lg text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">Барберы</a>
                         </li>
                         <li>
                             <a href="#" @click.prevent="showTable('staff')"
-                                class="block px-4 py-2 font-medium text-gray-900 hover:bg-gray-200">Обслуживающий персонал</a>
+                                class="block px-4 py-2 font-medium rounded-lg text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">Обслуживающий персонал</a>
+                        </li>
+                        <li>
+                            <a href="#" @click.prevent="showTable('undefined_worker')"
+                                class="block px-4 py-2 font-medium rounded-lg text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">Не определённые работники</a>
                         </li>
                     </ul>
                 </li>
@@ -95,11 +104,11 @@
             </ul>
         </div>
 
-        <div class="w-full md:w-9/12 lg:w-10/12 p-4">
+        <div class="w-full h-full md:w-9/12 lg:w-10/12 p-4">
             <div class="text-gray-500">
-                <AdminUserTable v-if="activeTable === 'users'" />
-                <AdminWorkerTable v-if="activeTable === 'workers'" />
-                <AdminDepartmentTable v-if="activeTable === 'departments'" />
+                <AdminCreateUser v-if="activeTable === 'add_visitors'" />
+                <AdminUserWorkers v-if="activeTable === 'worker_visitors'" />
+                <AdminUser v-if="activeTable === 'visitors'" />
                 <AdminWorkPositionsTable v-if="activeTable === 'work-positions'" />
                 <AdminTable v-if="activeTable === 'admins'" />
             </div>
@@ -114,13 +123,11 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-//   import AdminUserTable from "../../components/Admin/AdminUser/AdminUserTable.vue";
-//   import AdminDepartmentTable from "../../components/Admin/AdminDepartment/AdminDepartmentTable.vue";
-//   import AdminWorkerTable from "../../components/Admin/AdminWorker/AdminWorkerTable.vue";
-//   import AdminWorkPositionsTable from "../../components/Admin/AdminWorkerPosition/AdminWorkPositionsTable.vue";
-//   import AdminTable from "../../components/Admin/AdminTable/AdminTable.vue";
+  import AdminUser from "./../components/AdminPanel/AdminUsers/AdminUser.vue";
+  import AdminCreateUser from "./../components/AdminPanel/AdminUsers/AdminCreateUser.vue";
+  import AdminUserWorkers from "./../components/AdminPanel/AdminUsers/AdminUserWorkers.vue";
 
-const activeTable = ref('users');
+const activeTable = ref('');
 
 // Получаем данные о пользователе из localStorage
 const userData = JSON.parse(localStorage.getItem('UserData'));
@@ -143,6 +150,6 @@ const toggleSubmenu = (menu) => {
 };
 
 const showTable = (table) => {
-    isDropdownVisible.value = false; // Закрываем основное меню после выбора
+    activeTable.value = table; // Закрываем основное меню после выбора
 };
 </script>

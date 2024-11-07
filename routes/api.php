@@ -53,3 +53,13 @@ Route::put('/update_service/{id}',[ServiceController::class,'update']);
 Route::delete('/delete_service/{id}',[ServiceController::class,'destroy']);
 
 //WorkerController
+
+Route::get('/get_workers',[WorkerController::class,'index']);
+Route::get('/get_worker_barber',[WorkerController::class,'getBarbers']);
+Route::get('/get_worker_admin',[WorkerController::class,'getAdmins']);
+Route::get('/get_worker_undefined',[WorkerController::class,'getUndefined']);
+Route::get('/get_worker_staff',[WorkerController::class,'getStaff']);
+Route::get('/get_worker/{id}',[WorkerController::class,'show']);
+Route::post('/add_worker',[WorkerController::class,'store']);
+Route::put('/update_worker/{id}',[WorkerController::class,'update']);
+Route::delete('/delete_worker/{id}',[WorkerController::class,'destroy']);

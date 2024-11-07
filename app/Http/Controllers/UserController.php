@@ -117,7 +117,7 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
-            'user' => new UserResource($user),
+            'user' => $user,
             'message' => 'Успешно обновлено'
         ], 200);
         }

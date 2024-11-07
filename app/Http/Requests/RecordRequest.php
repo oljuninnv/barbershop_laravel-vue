@@ -56,7 +56,9 @@ class RecordRequest extends FormRequest
              'time.required' => 'Поле time обязательно для заполнения.',
              'time.date_format' => 'Поле time должно быть в формате HH:MM.',
              'user_email.email' => 'Поле user_email должно быть корректным адресом электронной почты.',
-             'phone.phone' => 'Не верный формат ввода номера телефона',
+             'user_phone.phone' => 'Не верный формат ввода номера телефона',
+             'user_name.string' => 'Имя должно быть строкой',
+             'user_name.max' => 'Имя не должно быть длиннее 100 символов.',
          ];
      }
 }

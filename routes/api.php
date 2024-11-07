@@ -78,6 +78,10 @@ Route::get('/records', [RecordController::class,'index']); // Получение
 
 //RecordServicesController
 
-
+Route::post('/record-services', [RecordServicesController::class, 'store']); // Добавление записи
+Route::put('/record-services/{id}', [RecordServicesController::class, 'update']); // Обновление записи
+Route::delete('/record-services/{id}', [RecordServicesController::class, 'destroy']); // Удаление записи
+Route::get('/record-services', [RecordServicesController::class, 'index']); // Получение всех записей
+Route::get('/record-services/{id}', [RecordServicesController::class, 'show']); // Получение одной записи по ID
 
 //GenarateRecordController

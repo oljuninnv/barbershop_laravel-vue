@@ -1,6 +1,8 @@
 import {createRouter, createWebHistory} from "vue-router"
 import Home from "../views/HomeView.vue"
 import Login from "../views/Auth/Login.vue"
+import SendResetLink from "../views/Auth/SendResetLink.vue"
+import ResetPassword from "../views/Auth/ResetPassword.vue"
 import Register from "../views/Auth/Register.vue"
 import UserProfile from "../views/UserProfile.vue"
 import BarberProfile from "../components/Profiles/BarberProfile.vue"
@@ -17,6 +19,16 @@ const routes = [
     {path:'/admin_profile',name:'AdminProfile',component:AdminProfile},
     {path:'/record',name:'Record',component:Record},
     {path:'/admin',name:'AdminPanel',component:AdminPanel},
+    {
+        path: '/auth/restore',
+        name: 'SendResetLink',
+        component: SendResetLink        
+    },
+    {
+        path: '/auth/restore/confirm',
+        name: 'ResetPassword',
+        component: ResetPassword        
+    },
 ];
 
 const router = createRouter({

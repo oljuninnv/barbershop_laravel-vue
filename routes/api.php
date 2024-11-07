@@ -10,6 +10,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\RecordServicesController;
 use App\Http\Controllers\GenerateRecordController;
+use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('auth/register', [AuthController::class,'register']);
 Route::post('auth/login', [AuthController::class,'login']);
+
+//Востановление пароля
+Route::post('/auth/restore', [ResetPasswordController::class, 'forgetPassword']);
+Route::post('/auth/restore/confirm', [ResetPasswordController::class, 'resetPassword']);
 
 //UserController
 

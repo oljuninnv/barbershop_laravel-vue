@@ -135,7 +135,7 @@ public function getBarbers()
         }
 
         if ($request->has('post_id')) {
-            $worker->city = $values['post_id'];
+            $worker->post_id = $values['post_id'];
         }
 
         $worker->save();

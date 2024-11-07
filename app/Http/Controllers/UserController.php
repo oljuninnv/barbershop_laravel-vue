@@ -217,4 +217,98 @@ class UserController extends Controller
 
         return response()->json($user);
     }
+
+//     public function addUsers()
+// {
+//     $users = [
+//         [
+//             'name' => 'Иван Иванов',
+//             'login' => 'ivan_ivanov',
+//             'email' => 'ivan@example.com',
+//             'phone' => '1234567890',
+//             'city' => 'Москва',
+//             'birthday' => '1990-01-01',
+//             'password' => 'password123',
+//         ],
+//         [
+//             'name' => 'Петр Петров',
+//             'login' => 'petr_petrov',
+//             'email' => 'petr@example.com',
+//             'phone' => '0987654321',
+//             'city' => 'Санкт-Петербург',
+//             'birthday' => '1992-02-02',
+//             'password' => 'password123',
+//         ],
+//         // Добавьте еще 5 пользователей с уникальными данными
+//         [
+//             'name' => 'Сергей Сергеев',
+//             'login' => 'sergey_sergeev',
+//             'email' => 'sergey@example.com',
+//             'phone' => '1122334455',
+//             'city' => 'Екатеринбург',
+//             'birthday' => '1993-03-03',
+//             'password' => 'password123',
+//         ],
+//         [
+//             'name' => 'Анна Анна',
+//             'login' => 'anna_anna',
+//             'email' => 'anna@example.com',
+//             'phone' => '2233445566',
+//             'city' => 'Казань',
+//             'birthday' => '1994-04-04',
+//             'password' => 'password123',
+//         ],
+//         [
+//             'name' => 'Ольга Ольгина',
+//             'login' => 'olga_olgina',
+//             'email' => 'olga@example.com',
+//             'phone' => '3344556677',
+//             'city' => 'Нижний Новгород',
+//             'birthday' => '1995-05-05',
+//             'password' => 'password123',
+//         ],
+//         [
+//             'name' => 'Дмитрий Дмитриев',
+//             'login' => 'dmitriy_dmitriev',
+//             'email' => 'dmitriy@example.com',
+//             'phone' => '4455667788',
+//             'city' => 'Челябинск',
+//             'birthday' => '1996-06-06',
+//             'password' => 'password123',
+//         ],
+//         [
+//             'name' => 'Елена Еленина',
+//             'login' => 'elena_elenina',
+//             'email' => 'elena@example.com',
+//             'phone' => '5566778899',
+//             'city' => 'Ростов-на-Дону',
+//             'birthday' => '1997-07-07',
+//             'password' => 'password123',
+//         ],
+//     ];
+
+//     foreach ($users as $userData) {
+//         $user = new User();
+//         $user->name = $userData['name'];
+//         $user->login = $userData['login'];
+//         $user->email = $userData['email'];
+//         $user->phone = $userData['phone'];
+//         $user->city = $userData['city'];
+//         $user->birthday = $userData['birthday'];
+//         $user->password = Hash::make($userData['password']);
+//         $user->save();
+
+//         // Проверяем, добавлять ли в таблицу Worker
+//         $post = Post::where('name', 'Undefined')->first();
+//         if ($post) {
+//             Worker::create([
+//                 'user_id' => $user->id,
+//                 'work_experience' => 0, // Начальное значение
+//                 'post_id' => $post->id, // Используем найденный post_id
+//             ]);
+//         }
+//     }
+
+//     return response()->json(['message' => '7 пользователей успешно добавлены.']);
+// }
 }

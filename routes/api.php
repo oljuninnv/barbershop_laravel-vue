@@ -7,6 +7,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RecordController;
+use App\Http\Controllers\RecordServicesController;
+use App\Http\Controllers\GenerateRecordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +38,7 @@ Route::get('/get_user/{id}',[UserController::class,'show']);
 Route::post('/add_user',[UserController::class,'store']);
 Route::put('/update_post/{id}',[UserController::class,'update']);
 Route::delete('/delete_post/{id}',[UserController::class,'destroy']);
+// Route::post('/add_users',[UserController::class,'addUsers']);
 
 //PostController
 
@@ -63,3 +67,17 @@ Route::get('/get_worker/{id}',[WorkerController::class,'show']);
 Route::post('/add_worker',[WorkerController::class,'store']);
 Route::put('/update_worker/{id}',[WorkerController::class,'update']);
 Route::delete('/delete_worker/{id}',[WorkerController::class,'destroy']);
+
+//RecordController
+
+Route::post('/records', [RecordController::class,'store']); // Добавление записи
+Route::put('/records/{id}', [RecordController::class,'update']); // Редактирование записи
+Route::get('/records/{id}', [RecordController::class,'show']); // Получение записи по id
+Route::delete('/records/{id}', [RecordController::class,'destroy']); // Удаление записи
+Route::get('/records', [RecordController::class,'index']); // Получение всех записей
+
+//RecordServicesController
+
+
+
+//GenarateRecordController

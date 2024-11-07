@@ -85,3 +85,5 @@ Route::get('/record-services', [RecordServicesController::class, 'index']); // �
 Route::get('/record-services/{id}', [RecordServicesController::class, 'show']); // Получение одной записи по ID
 
 //GenarateRecordController
+
+Route::post('/generate-records', [GenerateRecordController::class, 'generate']);

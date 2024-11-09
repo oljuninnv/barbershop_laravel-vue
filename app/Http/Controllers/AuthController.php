@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Worker;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
@@ -12,24 +13,36 @@ use App\Http\Requests\LoginRequest;
 class AuthController extends Controller
 {
     public function login(LoginRequest $request)
-    {        
-        $values = $request->all();
+{        
+    $values = $request->all();
 
-        // Проверка аутентификации
-        if (Auth::attempt(['email' => $values['email'], 'password' => $values['password']])) {
-            $user = Auth::user();
-            $success['token'] = $user->createToken('User Token')->accessToken;
+    // Проверка аутентификации
+    if (Auth::attempt(['email' => $values['email'], 'password' => $values['password']])) {
+        $user = Auth::user();
+        $success['token'] = $user->createToken('User Token')->accessToken;
 
-            // Формируем ответ
-            $success['data'] = [
+        // Получаем данные работника, включая имя поста
+        $worker = Worker::with('post')->where('user_id', $user->id)->first();
+
+        // Проверяем, найден ли работник
+        if (!$worker) {
+            return $this->successResponse([
                 'user' => $user,
-            ];
-
-            return $this->successResponse($success);
+                'token' => $success['token'],
+            ]);
         }
 
-        return $this->failureResponse(['error' => 'Ошибка в заполнении данных.']);
+        // Формируем ответ
+        $success['data'] = [
+            'user' => $user,
+            'worker' => $worker,
+        ];
+
+        return $this->successResponse($success);
     }
+
+    return $this->failureResponse(['error' => 'Ошибка в заполнении данных.']);
+}
 
     public function register(RegisterRequest $request): JsonResponse
     {

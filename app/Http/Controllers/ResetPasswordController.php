@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Mail;
 use App\Models\User;
 use App\Models\PasswordReset;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;

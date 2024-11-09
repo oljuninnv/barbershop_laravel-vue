@@ -26,24 +26,18 @@
   
     // Проверка наличия данных о работнике
     const workerData = JSON.parse(localStorage.getItem('UserData'));
-    console.log(workerData.worker);
-    
-    if (!workerData.worker) {
-      // Если данных о работнике нет, показываем UserProfile
-      profileComponent.value = UserProfile;
-      return;
-    }
-  
-    // Получаем имя поста
-    const postName = workerData.worker.post?.name;
-  
-    // Выбор компонента в зависимости от имени поста
-    if (postName === 'Barber') {
+    try{
+      const postName = workerData.worker.post.name;
+
+      if (postName == 'Barber') {
+      console.log('Barber');
       profileComponent.value = BarberProfile;
-    } else if (postName === 'Admin') {
-      profileComponent.value = AdminProfile;
-    } else {
-      profileComponent.value = UserProfile; // По умолчанию
+    } else if (postName == 'Admin') {
+      console.log('Admin')
+      profileComponent.value = AdminProfile;}
+    }
+    catch(error){
+      profileComponent.value = UserProfile;
     }
   });
   </script>

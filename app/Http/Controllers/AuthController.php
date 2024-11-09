@@ -26,16 +26,19 @@ class AuthController extends Controller
 
         // Проверяем, найден ли работник
         if (!$worker) {
-            return $this->successResponse([
+            $success['data'] = [
                 'user' => $user,
-                'token' => $success['token'],
-            ]);
+                'token' => $success['token']
+            ];
+    
+            return $this->successResponse($success);
         }
 
         // Формируем ответ
         $success['data'] = [
             'user' => $user,
             'worker' => $worker,
+            'token' => $success['token']
         ];
 
         return $this->successResponse($success);

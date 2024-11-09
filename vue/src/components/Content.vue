@@ -187,12 +187,12 @@
         </h2>
     </div>
     <div class="hover:translate-y-1 ease-out duration-500 active:animate-bounce">
-        <a href="#" class="bg-black text-[20px] p-2 rounded">Записаться</a>
+        <a href="/record" class="bg-black text-[20px] p-2 rounded">Записаться</a>
     </div>
 </section>
 
 <div class="text-white bg-[#000000] text-[20px]">
-    <p>© Copyright 2022 barbershop - All right reserved</p>
+    <p>© Copyright 2024 barbershop - All right reserved</p>
 </div>
 
 </template>

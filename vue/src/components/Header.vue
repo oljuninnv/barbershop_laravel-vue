@@ -13,7 +13,7 @@
         <a href="#services" class="text-sm font-semibold leading-6 text-white hover:text-red-600">Услуги</a>
         <a href="#barbers" class="text-sm font-semibold leading-6 text-white hover:text-red-600">Барберы</a>
         <a href="#contacts" class="text-sm font-semibold leading-6 text-white hover:text-red-600">Контакты</a>
-        <router-link class="text-sm font-semibold leading-6 text-white hover:text-red-600" to="/#">Записаться</router-link>
+        <router-link class="text-sm font-semibold leading-6 text-white hover:text-red-600" to="/record">Записаться</router-link>
       </PopoverGroup>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
         <router-link class="text-sm font-semibold leading-6 text-white hover:text-red-600" to="/login">Войти</router-link>
@@ -28,13 +28,13 @@
           <h1 class="mb-6 text-4xl font-bold">Место, где рождается ваш стиль</h1>
           <h3 class="mb-8 text-2xl font-bold">Хотите знать, почему мы лучшие?
             Записывайтесь, пока есть места!</h3>
-          <button
-            type="button"
+          <router-link
+            to="/record"
             class="inline-block rounded border-2 border-neutral-50 px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out hover:border-neutral-300 hover:text-neutral-200 focus:border-neutral-300 focus:text-neutral-200 focus:outline-none focus:ring-0 active:border-neutral-300 active:text-neutral-200 dark:hover:bg-neutral-600 dark:focus:bg-neutral-600"
             data-twe-ripple-init
             data-twe-ripple-color="light">
             Записаться
-          </button>
+          </router-link>
         </div>
       </div>
     </div>

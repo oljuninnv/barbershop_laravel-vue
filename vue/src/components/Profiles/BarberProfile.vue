@@ -42,10 +42,21 @@
   <div class="w-full mt-4">
     <div v-if="activeTab === 'profile'">
       <div class="flex flex-col">
-        <input type="text" v-model="userName" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Имя" />
-        <input type="text" v-model="userLogin" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Login" />
-        <input type="email" v-model="userEmail" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Email" />
-        <input type="text" v-model="userPhone" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Телефон" />
+        <label for="userName" class="mb-1">Имя</label>
+        <input type="text" id="userName" v-model="userName" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Имя" />
+
+        <label for="userLogin" class="mb-1">Login</label>
+        <input type="text" id="userLogin" v-model="userLogin" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Login" />
+
+        <label for="userEmail" class="mb-1">Email</label>
+        <input type="text" id="userEmail" v-model="userEmail" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Email" />
+
+        <label for="userPhone" class="mb-1">Телефон</label>
+        <input type="text" id="userPhone" v-model="userPhone" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Телефон" />
+
+        <label for="userCity" class="mb-1">Город</label>
+        <input type="text" id="userCity" v-model="userCity" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Город" />
+
         <input type="file" v-if="isEditing" @change="handleFileUpload" class="mb-2" />
         <button @click="toggleEdit" class="bg-blue-500 text-white p-2 rounded mt-2">
           {{ isEditing ? 'Сохранить' : 'Изменить данные' }}

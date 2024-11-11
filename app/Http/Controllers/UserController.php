@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {

@@ -41,9 +41,8 @@ Route::get('/get_visitor_users',[UserController::class,'getNonWorkers']);
 Route::get('/get_worker_users',[UserController::class,'getWorkers']);
 Route::get('/get_user/{id}',[UserController::class,'show']);
 Route::post('/add_user',[UserController::class,'store']);
-Route::put('/update_post/{id}',[UserController::class,'update']);
-Route::delete('/delete_post/{id}',[UserController::class,'destroy']);
-// Route::post('/add_users',[UserController::class,'addUsers']);
+Route::put('/update_user/{id}',[UserController::class,'update']);
+Route::delete('/delete_user/{id}',[UserController::class,'destroy']);
 
 //PostController
 
@@ -65,6 +64,7 @@ Route::delete('/delete_service/{id}',[ServiceController::class,'destroy']);
 
 Route::get('/get_workers',[WorkerController::class,'index']);
 Route::get('/get_worker_barber',[WorkerController::class,'getBarbers']);
+Route::get('/get_worker_barber_for_mainPage',[WorkerController::class,'getBarbersForMainPage']);
 Route::get('/get_worker_admin',[WorkerController::class,'getAdmins']);
 Route::get('/get_worker_undefined',[WorkerController::class,'getUndefined']);
 Route::get('/get_worker_staff',[WorkerController::class,'getStaff']);

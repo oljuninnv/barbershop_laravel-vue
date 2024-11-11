@@ -13,10 +13,12 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
+        $userId = $this->user ? $this->user->id : null;
+
         return [
             'name' => 'string|max:255',
-            'login' => 'string|unique:users,login,'.$this->user->id,
-            'email' => 'email|unique:users,email,'.$this->user->id,
+            'login' => 'string|unique:users,login,'. $userId,
+            'email' => 'email|unique:users,email,'. $userId,
             'city' => 'string|max:255',
             'phone' => 'phone',
             'birthday' => 'date_format:Y-m-d',

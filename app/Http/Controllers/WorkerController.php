@@ -61,7 +61,7 @@ class WorkerController extends Controller
 // 4. Получение всех работников с ролью Barber
 public function getBarbers()
     {
-        $post = Post::where('name', 'Barber')->first(); // Замените 'role' на фактическое имя столбца
+        $post = Post::where('name', 'Barber')->first();
 
         if (!$post) {
             return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
@@ -173,4 +173,34 @@ public function getBarbers()
         $worker->delete();
         return response()->json(['message' => 'Работник успешно удалён.']);
     }
+
+    // 4. Получение всех работников с ролью Barber
+public function getBarbersForMainPage()
+{
+   // Находим пост с названием 'Barber'
+   $post = Post::where('name', 'Barber')->first();
+
+   if (!$post) {
+       return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
+   }
+
+   // Получаем работников с найденным post_id и загружаем связанные данные из таблицы User
+   $barbers = Worker::with('user:id,name,image') // Загружаем только необходимые поля
+       ->where('post_id', $post->id)
+       ->get();
+
+   // Преобразуем данные для ответа
+   $barberData = $barbers->map(function ($worker) {
+       return [
+           'id' => $worker->id,
+           'name' => $worker->user->name,
+           'image' => $worker->user->image,
+           'work_experience' => $worker->work_experience,
+       ];
+   });
+
+   return $this->successResponse(
+       $this->paginate($barberData->toArray())
+   );
+}
 }

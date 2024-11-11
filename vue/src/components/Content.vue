@@ -51,54 +51,14 @@
         <h2 class="text-[26px] mb-5">Услуги</h2>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/vzroslay.svg" alt="Взрослая стрижка" />
+        <div v-for="service in services" :key="service.id" class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
+            <img :src="service.image" alt="Услуга" class="rounded-t-lg h-[80px] mr-4" />
             <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Мужская стрижка</h5>
-                <div class="text-[18px]">1500 Руб</div>
+                <h5 class="mb-2 text-xl font-medium leading-tight">{{ service.name }}</h5>
+                <div class="text-[18px]">{{ service.price }} Руб</div>
             </div>
         </div>
-
-        <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/kids.svg" alt="Детская стрижка" />
-            <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Укладка причёски</h5>
-                <div class="text-[18px]">1000 Руб</div>
-            </div>
-        </div>
-
-        <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/beard.svg" alt="Стрижка бороды" />
-            <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Стрижка бороды</h5>
-                <div class="text-[18px]">800 Руб</div>
-            </div>
-        </div>
-
-        <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/knife.svg" alt="Бритьё шеи" />
-            <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Бритьё шеи</h5>
-                <div class="text-[18px]">500 Руб</div>
-            </div>               
-        </div>
-
-        <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/losion.svg" alt="Увлажнение головы" />
-            <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Увлажнение головы</h5>
-                <div class="text-[18px]">300 Руб</div>
-            </div>             
-        </div>
-
-        <div class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img class="rounded-t-lg h-[80px] mr-4" src="/public/img/Barbershop.svg" alt="Уход за бородой" />
-            <div class="flex flex-col justify-between w-full">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Уход за бородой</h5>
-                <div class="text-[18px]">1 500 Руб</div>
-            </div>               
-        </div>
-    </div>          
+    </div>         
 </section>
 
     <!-- Барберы -->
@@ -106,46 +66,23 @@
     <div class="flex m-auto justify-center mt-5">
         <h2 class="text-[26px] mb-5">Наша команда</h2>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div class="mx-3 mt-6 flex flex-col rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
-            <a href="#!">
-                <img
-                    class="rounded-t-lg w-full"
-                    src="/public/img/barbers/barber1.svg"
-                    alt="Константин Назаров" />
-            </a>
-            <div class="p-6">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Константин Назаров</h5>
-                <p class="mb-4 text-base">Стаж: 8 лет</p>
-            </div>
-        </div>
+    <div class="flex flex-wrap gap-6 justify-center">
+    <div v-for="worker in workers" :key="worker.id" class="flex flex-col rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
+        <img v-if="worker.image"
+            class="rounded-t-lg w-full h-64 object-cover"
+            :src="`http://127.0.0.1:8000/storage/${worker.image}`" 
+            :alt="worker.name" />
+        <img v-else
+            class="rounded-t-lg w-full h-64 object-cover"
+            :src="/public/img/barbers/barber3.svg" 
+            :alt="worker.name" /> 
 
-        <div class="mx-3 mt-6 flex flex-col rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
-            <a href="#!">
-                <img
-                    class="rounded-t-lg w-full"
-                    src="/public/img/barbers/barber2.svg"
-                    alt="Максим Петров" />
-            </a>
-            <div class="p-6">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Максим Петров</h5>
-                <p class="mb-4 text-base">Стаж: 4 года</p>
-            </div>
-        </div>
-
-        <div class="mx-3 mt-6 flex flex-col rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
-            <a href="#!">
-                <img
-                    class="rounded-t-lg w-full"
-                    src="/public/img/barbers/barber3.svg"
-                    alt="Никита Кузнецов" />
-            </a>
-            <div class="p-6">
-                <h5 class="mb-2 text-xl font-medium leading-tight">Никита Кузнецов</h5>
-                <p class="mb-4 text-base">Стаж: 12 лет</p>
-            </div>
+        <div class="p-6">
+            <h5 class="mb-2 text-xl font-medium leading-tight">{{ worker.name }}</h5>
+            <p class="mb-4 text-base">Стаж: {{ worker.work_experience }} лет</p>
         </div>
     </div>
+</div>
 </section>
 
     <!-- Контакты -->
@@ -199,11 +136,44 @@
 
 <script>
     import YandexMap from './Map.vue';
+    import axios from '../libs/axios'; // Импортируем Axios
 
     export default {
-    name: 'App',
-    components: {
-        YandexMap
-    }
+        name: 'App',
+        components: {
+            YandexMap
+        },
+        data() {
+            return {
+                services: [], // Добавляем массив для хранения услуг
+                workers: []
+            };
+        },
+        mounted() {
+            this.fetchServices(); // Вызываем метод для получения услуг при монтировании компонента
+            this.fetchWorkers();
+        },
+        methods: {
+            fetchServices() {
+                axios.get('/api/get_services') // Выполняем GET-запрос к API
+                    .then(response => {
+                        this.services = response.data.response.data; // Сохраняем полученные данные в массив
+                        console.log(response.data.response.data); // Выводим полученные данные в консоль для отладки
+                    })
+                    .catch(error => {
+                        console.error("There was an error fetching the services:", error); // Обработка ошибок
+                    });
+            },
+            fetchWorkers() {
+            axios.get('/api/get_worker_barber_for_mainPage') // Выполняем GET-запрос к API
+                .then(response => {
+                    this.workers = response.data.response.data; // Сохраняем полученные данные в массив
+                    console.log(this.workers); // Выводим полученные данные в консоль для отладки
+                })
+                .catch(error => {
+                    console.error("There was an error fetching the workers:", error); // Обработка ошибок
+                });
+        }
+        }
     }
 </script>

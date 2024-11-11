@@ -80,7 +80,7 @@
       return {
         services: [
         { id: 1, name: 'Мужская стрижка', price: 1500, image: '/public/img/vzroslay.svg' },
-        { id: 2, name: 'Укладка причёски', price: 1000, image: '/public/img/kids.svg' },
+        { id: 2, name: 'Укладка причёски', price: 1000, image: '/public/img/styling.svg' },
         { id: 3, name: 'Стрижка бороды', price: 800, image: '/public/img/beard.svg' },
         { id: 4, name: 'Бритьё шеи', price: 500, image: '/public/img/knife.svg' },
         { id: 5, name: 'Увлажнение головы', price: 300, image: '/public/img/losion.svg' },
@@ -120,6 +120,7 @@
       },
       goBack() {
         console.log('Возврат на предыдущую страницу');
+        this.$router.push('/');
       },
       openModal() {
         this.showModal = true;

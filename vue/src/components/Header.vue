@@ -2,7 +2,7 @@
     <header class="bg-black">
     <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1 text-[24px] ">
-        <a href="#"><span class="font-normal text-white">Man</span><span class="bg-white">Style</span></a>
+        <a href="/"><span class="font-normal text-white">Man</span><span class="bg-white">Style</span></a>
       </div>
       <div class="flex lg:hidden">
         <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white" @click="mobileMenuOpen = true">

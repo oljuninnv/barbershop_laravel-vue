@@ -3,13 +3,15 @@
     <div class="rounded-xl relative mx-auto flex h-full w-full flex-col items-center p-[16px]">
       <div class="relative mt-1 flex h-32 w-full justify-center rounded-xl bg-cover"
         style='background-image: url("../public/img/after_header.svg");'>
-        <div class="absolute -bottom-12 flex h-[88px] w-[88px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 overflow-hidden">
-          <img class="h-full w-full object-cover rounded-full" src="/public/img/barbers/barber1.svg" alt="" />
+        <div class="absolute -bottom-12 flex h-[88px] w-[88px] items-center justify-center rounded-full border-[4px] border-white bg-white overflow-hidden">
+          <img v-if="userImage" class="h-full w-full object-cover rounded-full" src="/public/img/barbers/barber1.svg" alt="User_Avatar" />
+          <img v-else class="h-full w-full object-cover rounded-full" src="../../../public/img/default.png" alt="User_Avatar" />
+
         </div>
       </div>
       <div class="mt-16 flex flex-col items-center">
         <h4 class="text-bluePrimary text-xl font-bold text-center">{{ userName }}</h4>
-        <p class="text-lightSecondary text-base font-normal text-center">{{ userRole }}</p>
+        <p class="text-lightSecondary text-base font-normal text-center">{{ userPost }}</p>
       </div>
       <div class="flex flex-col mt-4 w-full">
         <label for="userName" class="mb-1">Имя</label>
@@ -27,7 +29,9 @@
         <label for="userCity" class="mb-1">Город</label>
         <input type="text" id="userCity" v-model="userCity" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Город" />
 
-        <input type="file" v-if="isEditing" @change="handleFileUpload" class="mb-2" />
+        <label v-if="isEditing" for="userImage" class="mb-1">Аватар</label>
+        <input type="file" id="userImage" v-if="isEditing" @change="handleFileUpload" class="mb-2" />
+
         <button @click="toggleEdit" class="bg-red-500 text-white p-2 rounded mt-2">
           {{ isEditing ? 'Сохранить' : 'Изменить данные' }}
         </button>
@@ -40,42 +44,66 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from '../../libs/axios';
 
-const userName = ref('Константин Назаров');
-const userEmail = ref('example@example.com');
-const userLogin = ref('admin');
-const userRole = ref('Гость');
-const userPhone = ref('89069081178');
-const userCity = ref('Москва'); // Добавляем город
-const isEditing = ref(false); // Состояние редактирования
 
-// Функция для переключения режима редактирования
-const toggleEdit = () => {
-  if (isEditing.value) {
-    // Здесь можно добавить логику для сохранения данных, например, отправка на сервер
-    console.log('Данные сохранены:', {
-      userName: userName.value,
-      userLogin: userLogin.value,
-      userEmail: userEmail.value,
-      userPhone: userPhone.value,
-      userCity: userCity.value,
-    });
+const userName = ref('');
+const userEmail = ref('');
+const userLogin = ref('');
+const userPhone = ref('');
+const userCity = ref('');
+const userImage = ref(null);
+const isEditing = ref(false);
+
+onMounted(() => {
+  const userData = JSON.parse(localStorage.getItem('UserData'));
+  if (userData) {
+    userName.value = userData.user.name;
+    userEmail.value = userData.user.email;
+    userLogin.value = userData.user.login;
+    userPhone.value = userData.user.phone;
+    userCity.value = userData.city;
   }
-  isEditing.value = !isEditing.value; // Переключаем состояние редактирования
-};
+});
 
-// Функция для обработки загрузки файла (например, для аватара)
 const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    // Здесь можно добавить логику для загрузки файла на сервер
-    console.log('Загружен файл:', file.name);
-  }
+  userImage.value = event.target.files[0]; // Сохраняем файл в реактивную переменную
 };
 
-// Функция для перехода на админ-панель
-const goToAdminPanel = () => {
-  window.location.href = '/admin'; // Замените на нужный путь
+const toggleEdit = async () => {
+  if (isEditing.value) {
+    try {
+
+      const formData = new FormData();
+      formData.append('name', userName.value);
+      formData.append('email', userEmail.value);
+      formData.append('login', userLogin.value);
+      formData.append('phone', userPhone.value);
+      formData.append('city', userCity.value);
+      if (userData.value.image) {
+            formData.append('image', userData.value.image, userData.value.image.name);
+        }
+
+        formData.append('_method', 'put');
+
+      const response = await axios.post(`api/update_user/${id}`, formData, {
+      });
+
+      console.log('Данные успешно обновлены:', response.data);
+
+      // Обновляем данные в localStorage
+      userData.user.name = userName.value;
+      userData.user.email = userEmail.value;
+      userData.user.login = userLogin.value;
+      userData.user.phone = userPhone.value;
+      userData.city = userCity.value;
+
+      localStorage.setItem('UserData', JSON.stringify(userData)); // Сохраняем обновленные данные обратно в localStorage
+    } catch (error) {
+      console.error('Ошибка при обновлении данных:', error);
+    }
+  }
+  isEditing.value = !isEditing.value;
 };
 </script>

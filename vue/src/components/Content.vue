@@ -52,7 +52,7 @@
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <div v-for="service in services" :key="service.id" class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img :src="service.image" alt="Услуга" class="rounded-t-lg h-[80px] mr-4" />
+            <img :src="service.image" alt="Услуга" class="rounded-t-lg h-[80px] w-[40px] mr-4" />
             <div class="flex flex-col justify-between w-full">
                 <h5 class="mb-2 text-xl font-medium leading-tight">{{ service.name }}</h5>
                 <div class="text-[18px]">{{ service.price }} Руб</div>
@@ -66,20 +66,20 @@
     <div class="flex m-auto justify-center mt-5">
         <h2 class="text-[26px] mb-5">Наша команда</h2>
     </div>
-    <div class="flex flex-wrap gap-6 justify-center">
-    <div v-for="worker in workers" :key="worker.id" class="flex flex-col rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
+    <div class="flex flex-wrap justify-center gap-5">
+    <div v-for="worker in workers" :key="worker.id" class="flex flex-col rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white h-100 w-64">
         <img v-if="worker.image"
-            class="rounded-t-lg w-full h-64 object-cover"
+            class="rounded-lg w-full h-full object-cover"
             :src="`http://127.0.0.1:8000/storage/${worker.image}`" 
             :alt="worker.name" />
         <img v-else
-            class="rounded-t-lg w-full h-64 object-cover"
+            class="rounded-t-lg w-full h-full object-cover"
             :src="/public/img/barbers/barber3.svg" 
             :alt="worker.name" /> 
 
-        <div class="p-6">
-            <h5 class="mb-2 text-xl font-medium leading-tight">{{ worker.name }}</h5>
-            <p class="mb-4 text-base">Стаж: {{ worker.work_experience }} лет</p>
+        <div class="p-6 flex-grow flex flex-col justify-center items-center">
+            <h5 class="mb-2 text-xl font-medium leading-tight text-center">{{ worker.name }}</h5>
+            <p class="mb-4 text-base text-center">Стаж: {{ worker.work_experience }} лет</p>
         </div>
     </div>
 </div>

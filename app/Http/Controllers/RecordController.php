@@ -107,4 +107,42 @@ class RecordController extends Controller
             )
         );
      }
+
+     public function BarberRecords($id)
+{
+    try {
+        // Получаем ID поста "Barber"
+        $barberPost = Post::where('name', 'Barber')->first();
+
+        if (!$barberPost) {
+            return $this->errorResponse('Barber post not found', 404);
+        }
+
+        $barberPostId = $barberPost->id;
+
+        // Проверяем, существует ли работник с переданным ID и постом "Barber"
+        $worker = Worker::where('id', $id)->where('post_id', $barberPostId)->first();
+
+        if (!$worker) {
+            return $this->errorResponse('Worker not found or does not have the Barber post', 404);
+        }
+
+        // Получаем записи, соответствующие этому работнику, и сортируем по дате
+        $records = Record::where('worker_id', $id)
+            ->orderBy('date') // Сортировка по дате
+            ->orderBy('time') // Дополнительная сортировка по времени, если необходимо
+            ->get();
+
+        if ($records->isEmpty()) {
+            return $this->successResponse([], 'No records found for this worker');
+        }
+
+        return $this->successResponse($records);
+    } catch (\Exception $e) {
+        // Логируем ошибку для дальнейшего анализа
+        \Log::error('Error fetching barber records: ' . $e->getMessage());
+
+        return $this->errorResponse('An error occurred while fetching records', 500);
+    }
+}
 }

@@ -22,7 +22,7 @@
   <script setup>
   import { ref } from 'vue';
   
-  const times = ['9:00', '10:40', '12:40', '14:20', '16:00', '17:40', '18:20', '19:50'];
+  const times = ['09:00', '10:40', '12:40', '14:20', '16:00', '17:40', '18:20', '19:50'];
   const selectedDate = ref('');
   const selectedTimes = ref([]);
   const isCheckboxChecked = ref(false);

@@ -108,15 +108,23 @@ const fetchSchedule = async () => {
 
       if (isCurrentWeek(recordDate)) {
         currentWeekSchedule.value[day] = currentWeekSchedule.value[day] || {};
-        if (record.user_name || record.user_id) {
+        if (record.user_name != null || record.user_id != null) {
           currentWeekSchedule.value[day][time] = 'Занято';
           console.log(`Занято на текущей неделе: ${day} ${time} - ${record.user_name || 'Пользователь без имени'}`);
         }
+        else{
+          currentWeekSchedule.value[day][time] = 'Свободно';
+          console.log(`Свободно на текущей неделе: ${day} ${time} - ${record.user_name || 'Пользователь без имени'}`);
+        }
       } else if (isNextWeek(recordDate)) {
         nextWeekSchedule.value[day] = nextWeekSchedule.value[day] || {};
-        if (record.user_name || record.user_id) {
+        if (record.user_name != null || record.user_id != null) {
           nextWeekSchedule.value[day][time] = 'Занято';
           console.log(`Занято на следующей неделе: ${day} ${time} - ${record.user_name || 'Пользователь без имени'}`);
+        }
+        else{
+          nextWeekSchedule.value[day][time] = 'Свободно';
+          console.log(`Свободно на следующей неделе: ${day} ${time} - ${record.user_name || 'Пользователь без имени'}`);
         }
       }
     });
@@ -138,7 +146,15 @@ const isNextWeek = (date) => {
 };
 
 const getTimeStatus = (status) => {
-  return status === 'Занято' ? 'Занято' : 'Свободно';
+  if (status === 'Занято') {
+    return 'Занято';
+  }
+  else if (status === 'Свободно') {
+    return 'Свободно';
+  }
+  else {
+    return '';
+  }
 };
 
 const formatDate = (date) => {

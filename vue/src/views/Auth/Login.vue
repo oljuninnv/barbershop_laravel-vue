@@ -32,6 +32,11 @@
           <button type="submit"
             class="flex w-full justify-center rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-neutral-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Войти</button>
         </div>
+
+        <!-- Кнопка для возврата на главную страницу -->
+        <div>
+          <router-link to="/" class="flex w-full justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-400">Вернуться на главную</router-link>
+        </div>
       </form>
 
       <p class="mt-10 text-center text-sm text-gray-500">

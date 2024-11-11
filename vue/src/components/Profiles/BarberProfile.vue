@@ -48,6 +48,12 @@
       <GenerateRecords />
     </div>
   </div>
+  <router-link to="/" class="bg-black text-white p-2 rounded mt-4 w-full text-center">
+        На главную страницу
+  </router-link>
+  <button @click="logout" class="bg-gray-500 text-white p-2 rounded mt-4 w-full">
+        Выйти из аккаунта
+      </button>
   </div>  
   </section>
 </template>
@@ -56,11 +62,11 @@
 import Profile from './ProfilesComponent/Profile.vue';
 import Records from './ProfilesComponent/Records.vue';
 import GenerateRecords from './ProfilesComponent/GenerateRecords.vue';
-
+import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 
 const activeTab = ref('records'); // Установите активную вкладку по умолчанию
-
+const router = useRouter();
 const userImage = ref(''); // Инициализируем переменную для изображения пользователя
 const userName = ref(''); // Инициализируем переменную для имени пользователя
 
@@ -82,6 +88,13 @@ const getUserImageFromLocalStorage = () => {
   }
   return '../../../public/default.png'; // Если данных нет, возвращаем путь к default.png
 };
+
+const logout = () => {
+  // Очистка данных из localStorage
+  localStorage.clear();
+  router.push('/login');
+};
+
 
 // Используем onMounted для получения имени пользователя при монтировании компонента
 onMounted(() => {

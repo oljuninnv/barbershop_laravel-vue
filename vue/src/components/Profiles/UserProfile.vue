@@ -75,6 +75,12 @@
           </div>
         </div>
       </div>
+      <router-link to="/" class="bg-black text-white p-2 rounded mt-4 w-full text-center">
+        На главную страницу
+      </router-link>
+      <button @click="logout" class="bg-gray-500 text-white p-2 rounded mt-4 w-full">
+        Выйти из аккаунта
+      </button>
     </div>
   </section>
 </template>
@@ -149,6 +155,12 @@ const filteredAppointments = computed(() => {
     return []; // Если appointments не массив, возвращаем пустой массив
   }
 });
+
+const logout = () => {
+  // Очистка данных из localStorage
+  localStorage.clear();
+  router.push('/login');
+};
 </script>
 
 <style>

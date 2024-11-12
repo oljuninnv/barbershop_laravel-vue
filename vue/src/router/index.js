@@ -8,6 +8,7 @@ import UserProfile from "../views/UserProfile.vue"
 import Record from "../views/Record.vue"
 import AdminPanel from "../views/AdminPanelView.vue"
 import NotFoundPage from "../views/NotFoundPage.vue"
+import Confirmation from "../views/Confirmation.vue"
 
 const routes = [
     {path:'/',name:'Home',component:Home},
@@ -18,6 +19,7 @@ const routes = [
     {path:'/admin',name:'AdminPanel',component:AdminPanel},
     {path: '/auth/restore',name: 'SendResetLink',component: SendResetLink},
     {path: '/auth/restore/confirm',name: 'ResetPassword',component: ResetPassword},
+    {path: '/confirmation',component: Confirmation, name: 'Confirmation'},
     {path: '/:catchAll(.*)',component: NotFoundPage, name: 'NotFoundPage'},
 ];
 

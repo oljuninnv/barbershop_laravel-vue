@@ -29,7 +29,7 @@
               :src="`http://127.0.0.1:8000/storage/${userImage}`" alt="User's Face" @mouseover="showTooltip = true"
               @mouseleave="showTooltip = false">
             <img v-else class="h-[50px] w-[50px] rounded-full cursor-pointer object-cover border-2 border-white"
-              src="../../../public/default.png" alt="User's Face" @mouseover="showTooltip = true"
+              src="../../../public/img/default.png" alt="User's Face" @mouseover="showTooltip = true"
               @mouseleave="showTooltip = false">
           </router-link>
           <div v-if="showTooltip" class="absolute bg-gray-700 text-white text-xs rounded py-1 -bottom-8 right-0 z-50">

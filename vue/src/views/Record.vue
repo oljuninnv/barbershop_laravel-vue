@@ -4,20 +4,19 @@
       Страница записи на приём
     </header>
     <main class="bg-[#EBE9E9] flex flex-col justify-center items-center w-full min-h-screen px-4 md:px-10 lg:px-20">
+      <!-- Выбор барбера -->
       <section class="barbers-list w-full flex flex-col md:flex-row gap-5 mt-5">
         <h2 class="text-[26px]">Выберите барбера:</h2>
         <select id="barberSelect" class="flex-1" v-model="selectedBarber">
           <option value="" disabled selected>Выберите барбера</option>
-          <option value="Константин Назаров">Константин Назаров</option>
-          <option value="Максим Петров">Максим Петров</option>
-          <option value="Никита Кузнецов">Никита Кузнецов</option>
+          <option v-for="barber in barbers" :key="barber.worker_id" :value="barber.worker_id">{{ barber.name }}</option>
         </select>
       </section>
 
       <!-- Выбор услуг -->
       <section class="services w-full mt-5">
         <h2 class="text-[26px] mb-5">Услуги:</h2>
-        <div class="overflow-y-auto max-h-80"> <!-- Блок со скроллом -->
+        <div class="overflow-y-auto max-h-80">
           <div class="flex flex-col gap-5">
             <div
               class="service-card flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4"
@@ -34,155 +33,254 @@
             </div>
           </div>
         </div>
+        <div class="text-[18px] font-bold mt-4">Итоговая стоимость: {{ totalPrice }} Руб</div>
       </section>
 
       <!-- Выбор даты -->
       <section class="date-picker w-full mt-5">
         <h2 class="text-[26px] mb-5">Выберите дату</h2>
-        <input class="input_text w-full" type="date" :min="minDate" :max="maxDate" @change="selectDate" />
+        <input class="input_text w-full" type="date" :min="minDate" :max="maxDate" v-model="selectedDate" @change="fetchAvailableRecords" />
       </section>
 
       <!-- Выбор времени -->
       <section class="time-picker w-full mt-5">
         <h2 class="text-[26px] mb-5">Выберите время</h2>
-        <div class="time-buttons flex flex-wrap gap-2">
-          <button v-for="time in times" :key="time" :class="{'bg-red-500': isTimeTaken(time), 'bg-blue-500': !isTimeTaken(time)}"
-            @click="selectTime(time)">
-            {{ time }}
-          </button>
-        </div>
+    <div class="time-buttons flex flex-wrap gap-2">
+      <button 
+        v-for="time in times" 
+        :key="time" 
+        :class="{'bg-red-500': selectedTime === time, 'bg-white': selectedTime !== time && !isTimeTaken(time)}"
+        @click="selectTime(time)">
+        {{ time }}
+      </button>
+    </div>
       </section>
 
       <!-- Кнопки управления -->
       <div class="controls flex flex-col md:flex-row gap-5 mt-5 w-full mb-5">
         <button class="bg-[#000000] text-white p-5 rounded flex-1" @click="goBack">Вернуться обратно</button>
-        <button class="bg-[#000000] text-white p-5 rounded flex-1" @click="openModal">Добавить запись</button>
+        <button class="bg-[#000000] text-white p-5 rounded flex-1" @click="addAppointment">Добавить запись</button>
       </div>
 
       <!-- Модальное окно -->
-      <div v-if="showModal" class="modal">
+      <div v-if="showModal" class="modal-overlay">
         <div class="modal-content text-center text-[20px]">
-          <h2>Введите ваши данные</h2>
-          <input class="input_text" type="text" placeholder="Имя" v-model="userName" />
-          <input class="input_text" type="email" placeholder="Почта" v-model="userEmail" />
-          <input class="input_text" type="tel" placeholder="Телефон" v-model="userPhone" />
-          <button class="bg-[#000000] text-white p-2 rounded" @click="submitAppointment">Подтвердить</button>
-          <button class="bg-[#000000] text-white p-2 rounded" @click="closeModal">Отмена</button>
+          <h2 class="mb-5">Введите ваши данные</h2>
+          <div class="flex flex-col gap-5">
+            <input class="input_text" type="text" placeholder="Имя" v-model="userName" />
+            <input class="input_text" type="email" placeholder="Почта" v-model="userEmail" />
+            <input class="input_text" type="tel" placeholder="Телефон" v-model="userPhone" />
+          </div>
+          <div class="flex gap-5 mt-5 justify-center">
+            <button class="bg-[#000000] text-white p-2 rounded" @click="submitAppointment">Подтвердить</button>
+            <button class="bg-[#000000] text-white p-2 rounded" @click="closeModal">Отмена</button>
+          </div>
+          
         </div>
       </div>
     </main>
   </div>
 </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        services: [
-        { id: 1, name: 'Мужская стрижка', price: 1500, image: '/public/img/vzroslay.svg' },
-        { id: 2, name: 'Укладка причёски', price: 1000, image: '/public/img/styling.svg' },
-        { id: 3, name: 'Стрижка бороды', price: 800, image: '/public/img/beard.svg' },
-        { id: 4, name: 'Бритьё шеи', price: 500, image: '/public/img/knife.svg' },
-        { id: 5, name: 'Увлажнение головы', price: 300, image: '/public/img/losion.svg' },
-        { id: 6, name: 'Уход за бородой', price: 1500, image: '/public/img/Barbershop.svg' }
-      ],
-      selectedServices: [], // Массив для хранения выбранных услуг
-        minDate: new Date().toISOString().split('T')[0],
-        maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
-        times: ['9:00', '10:40', '12:40', '14:20', '16:00', '17:40', '18:20', '19:50'],
-        takenTimes: ['10:40', '14:20'], // Пример занятых времен
-        showModal: false,
-        userName: '',
-        userEmail: '',
-        userPhone: '',
-      };
-    },
-    methods: {
-      toggleService(service) {
-      const index = this.selectedServices.indexOf(service.id);
-      if (index > -1) {
-        this.selectedServices.splice(index, 1); // Удалить услугу
-      } else {
-        this.selectedServices.push(service.id); // Добавить услугу
+
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from '../libs/axios'; 
+
+const userId = ref('null');
+const router = useRouter();
+const barbers = ref([]);
+const services = ref([]);
+const selectedServices = ref([]);
+const selectedBarber = ref(null);
+const selectedDate = ref(null);
+const selectedTime = ref(null);
+const showModal = ref(false);
+const userName = ref('');
+const userEmail = ref('');
+const userPhone = ref('');
+const minDate = ref(new Date().toISOString().split('T')[0]);
+const maxDate = ref(new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0]);
+const times = ref(['9:00:00', '10:40:00', '12:40:00', '14:20:00', '16:00:00', '17:40:00', '18:20:00', '19:50:00']);
+const takenTimes = ref([]);
+const selectedRecord = ref(null);
+const records = ref([]);
+const totalPrice = computed(() => {
+  return services.value.reduce((total, service) => {
+    return Number(total) + (selectedServices.value.includes(service.id) ? Number(service.price) : 0);
+  }, 0);
+});
+
+const fetchData = async () => {
+  try {
+    const response = await axios.get('/api/get_records_info');
+    barbers.value = response.data.barbers;
+    services.value = response.data.services;
+  } catch (error) {
+    console.error('Ошибка при загрузке данных:', error);
+  }
+};
+
+const toggleService = (service) => {
+  console.log(service.name);
+  const index = selectedServices.value.indexOf(service.id);
+  if (index > -1) {
+    selectedServices.value.splice(index, 1);
+  } else {
+    selectedServices.value.push(service.id);
+  }
+};
+
+const fetchAvailableRecords = async (workerId) => {
+  console.log(workerId);
+  try {
+    const response = await axios.get('/api/available-records', {
+      params: {
+        date: selectedDate.value,
+        worker_id: selectedBarber.value,
       }
-    },
-      addService(service) {
-        console.log(`Услуга добавлена: ${service}`);
-      },
-      selectDate(event) {
-        console.log(`Дата выбрана: ${event.target.value}`);
-      },
-      selectTime(time) {
-        console.log(`Время выбрано: ${time}`);
-      },
-      isTimeTaken(time) {
-        return this.takenTimes.includes(time);
-      },
-      goBack() {
-        console.log('Возврат на предыдущую страницу');
-        this.$router.push('/');
-      },
-      openModal() {
-        this.showModal = true;
-      },
-      closeModal() {
-        this.showModal = false;
-      },
-      submitAppointment() {
-        console.log(`Запись добавлена: ${this.userName}, ${this.userEmail}, ${this.userPhone}`);
-        this.closeModal();
-      },
-    },
-  };
-  </script>
+    });
+    records.value = response.data;
+    times.value = response.data.map(element => element.time); // Обновляем доступные времена
+    takenTimes.value = []; // Очищаем занятые времена
+    selectedTime.value = null; // Сбрасываем выбранное время
+  } catch (error) {
+    console.error('Ошибка при загрузке доступных записей:', error);
+  }
+};
+
+watch([() => selectedBarber.value, () => selectedDate.value], () => {
+  console.log(selectedBarber.value);
+  fetchAvailableRecords(selectedBarber.value);
+});
+
+const selectTime = (time) => {
+  console.log(time);
   
-  <style scoped>
-  .barbers-list ul {
-    list-style-type: none;
-    padding: 0;
+  if (!isTimeTaken(time)) {
+    selectedTime.value = time; // Устанавливаем выбранное время
+  } else {
+    console.log('Это время занято');
   }
-  .service-card {
-    background-color: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  .time-buttons button {
-    margin: 5px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    display: flex;
-    width: 500px;
-    flex-direction: column;
-    gap:5px;
-  }
-  .overflow-y-auto {
-  overflow-y: auto;
-}
+};
 
+const isTimeTaken = (time) => {
+  return takenTimes.value.includes(time);
+};
+
+const goBack = () => {
+  router.push('/');
+};
+
+const addAppointment = () => {
+  if (!selectedBarber.value) {
+    alert('Пожалуйста, выберите барбера.');
+    return;
+  }
+  if (!selectedDate.value) {
+    alert('Пожалуйста, выберите дату.');
+    return;
+  }
+  if (!selectedTime.value) {
+    alert('Пожалуйста, выберите время.');
+    return;
+  }
+  if (selectedServices.value.length === 0) {
+    alert('Пожалуйста, выберите хотя бы одну услугу.');
+    return;
+  }
+  const userData = JSON.parse(localStorage.getItem('UserData'));
+  if (userData && userData.user) {
+    submitAppointment(userData.user.id);
+  } else {
+    showModal.value = true;
+  }
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
+const submitAppointment = async () => {
+  // Получаем userId из localStorage
+  selectedRecord.value = records.value.find(i => i.time == selectedTime.value)
+  const userData = JSON.parse(localStorage.getItem('UserData'));
+  const userId = userData && userData.user ? userData.user.id : null;
+
+  const appointmentData = {
+    worker_id: selectedBarber.value,
+    date: selectedDate.value,
+    time: selectedTime.value,
+    services: selectedServices.value,
+  };
+
+  console.log(userId);
+  
+  // Если userId отсутствует, добавляем данные пользователя
+  if (userId == null) {
+    appointmentData.user_name = userName.value;
+    appointmentData.user_email = userEmail.value;
+    appointmentData.user_phone = userPhone.value;
+  } else {
+    appointmentData.user_id = userId; // Добавляем userId в данные
+  }
+
+  console.log(appointmentData);
+
+  try {
+    await axios.put(`/api/records_update/${selectedRecord.value.id}`, appointmentData);
+    router.push({ 
+        path: '/confirmation', 
+        query: { 
+            date: appointmentData.date, 
+            time: appointmentData.time, 
+            services: JSON.stringify(appointmentData.services), // Преобразуем массив в строку
+            user_name: appointmentData.user_name,
+            user_email: appointmentData.user_email,
+            user_phone: appointmentData.user_phone,
+            worker_id: appointmentData.worker_id,
+            total_price: totalPrice.value,
+        } 
+    });
+  } catch (error) {
+    console.error('Ошибка при добавлении записи:', error);
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
+</script>
+
+<style scoped>
+.barbers-list ul {
+  list-style-type: none;
+  padding: 0;
+}
 .service-card {
-  transition: background-color 0.3s; /* Плавный переход цвета фона */
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Затемнение фона */
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center; /* Центрирование по вертикали */
+  z-index: 1000; /* Убедитесь, что модальное окно выше других элементов */
 }
 
-.service-card:hover {
-  background-color: #f0f0f0; /* Цвет при наведении */
+.modal-content {
+  background-color: white; /* Цвет фона модального окна */
+  padding: 20px;
+  border-radius: 8px; /* Закругленные углы */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень для модального окна */
+  width: 300px; /* Ширина модального окна */
 }
-  </style>
+</style>

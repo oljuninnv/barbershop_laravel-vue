@@ -48,6 +48,7 @@ class RecordRequest extends FormRequest
      {
          return [
              'worker_id.required' => 'Поле worker_id обязательно для заполнения.',
+             'user_id.integer' => 'Поле user_id обязательно должно быть числом',
              'worker_id.integer' => 'Поле worker_id должно быть целым числом.',
              'worker_id.exists' => 'Указанный worker_id не существует.',
              'user_id.exists' => 'Данный пользователь не существует',

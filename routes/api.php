@@ -76,12 +76,14 @@ Route::delete('/delete_worker/{id}',[WorkerController::class,'destroy']);
 //RecordController
 
 Route::post('/records', [RecordController::class,'store']); // Добавление записи
-Route::put('/records/{id}', [RecordController::class,'update']); // Редактирование записи
+Route::put('/records_update/{id}', [RecordController::class,'update']); // Редактирование записи
 Route::get('/records/{id}', [RecordController::class,'show']); // Получение записи по id
 Route::delete('/records/{id}', [RecordController::class,'destroy']); // Удаление записи
 Route::get('/records', [RecordController::class,'index']); // Получение всех записей
 Route::get('/barber_records/{id}', [RecordController::class,'BarberRecords']); // Получение всех записей барбера
 Route::get('/visitors_records/{id}', [RecordController::class,'VisitorRecords']); // Получение всех записей пользователя
+Route::get('/get_records_info', [RecordController::class,'getInfoForRecords']);
+Route::get('/available-records', [RecordController::class, 'getAvailableRecords']);
 
 //RecordServicesController
 

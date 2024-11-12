@@ -2,30 +2,28 @@
   <section class="p-5">
     <div class="rounded-xl relative mx-auto flex h-full w-full flex-col items-center p-[16px]">
       <div class="relative mt-1 flex h-32 w-full justify-center rounded-xl bg-cover"
-        style='background-image: url("../public/img/after_header.svg");'>
-        <div
-          class="absolute -bottom-12 flex h-[88px] w-[88px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 overflow-hidden">
-          <img class="h-full w-full object-cover rounded-full" src="/public/img/barbers/barber1.svg" alt="" />
-        </div>
+           style='background-image: url("../public/img/after_header.svg");'>
+           <div class="absolute -bottom-12 flex h-[88px] w-[88px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 overflow-hidden">
+    <img class="h-full w-full object-cover rounded-full" :src="userImage" alt="User Image" />
+  </div>
       </div>
       <div class="mt-16 flex flex-col items-center">
         <h4 class="text-bluePrimary text-xl font-bold text-center">{{ userName }}</h4>
-        <p class="text-lightSecondary text-base font-normal text-center">{{ userRole }}</p>
+        <p class="text-lightSecondary text-base font-normal text-center">Гость</p>
       </div>
 
       <!-- Переключатель между вкладками -->
-      <div
-        class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 w-full">
+      <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 w-full">
         <ul class="flex flex-wrap -mb-px">
           <li class="me-2">
             <a href="#" @click.prevent="activeTab = 'profile'"
-              :class="{ 'border-b-2 border-blue-600 text-blue-600': activeTab === 'profile', 'border-transparent': activeTab !== 'profile' }"
-              class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Профиль</a>
+               :class="{ 'border-b-2 border-blue-600 text-blue-600': activeTab === 'profile', 'border-transparent': activeTab !== 'profile' }"
+               class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Профиль</a>
           </li>
           <li class="me-2">
             <a href="#" @click.prevent="activeTab = 'appointments'"
-              :class="{ 'border-b-2 border-blue-600 text-blue-600': activeTab === 'appointments', 'border-transparent': activeTab !== 'appointments' }"
-              class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Записи</a>
+               :class="{ 'border-b-2 border-blue-600 text-blue-600': activeTab === 'appointments', 'border-transparent': activeTab !== 'appointments' }"
+               class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Записи</a>
           </li>
         </ul>
       </div>
@@ -33,42 +31,22 @@
       <!-- Контент в зависимости от активной вкладки -->
       <div class="w-full mt-4">
         <div v-if="activeTab === 'profile'">
-          <div class="flex flex-col">
-            <label for="userName" class="mb-1">Имя</label>
-        <input type="text" id="userName" v-model="userName" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Имя" />
-
-        <label for="userLogin" class="mb-1">Login</label>
-        <input type="text" id="userLogin" v-model="userLogin" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Login" />
-
-        <label for="userEmail" class="mb-1">Email</label>
-        <input type="text" id="userEmail" v-model="userEmail" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Email" />
-
-        <label for="userPhone" class="mb-1">Телефон</label>
-        <input type="text" id="userPhone" v-model="userPhone" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Телефон" />
-
-        <label for="userCity" class="mb-1">Город</label>
-        <input type="text" id="userCity" v-model="userCity" :disabled="!isEditing" class="mb-2 p-2 border rounded" placeholder="Город" />
-
-            <input type="file" v-if="isEditing" @change="handleFileUpload" class="mb-2" />
-            <button @click="toggleEdit" class="bg-red-500 text-white p-2 rounded mt-2">
-              {{ isEditing ? 'Сохранить' : 'Изменить данные' }}
-            </button>
-          </div>
+          <Profile/>
         </div>
         <div v-else>
           <h3 class="text-lg font-bold mb-4">Список записей</h3>
           <div class="tabs">
             <button @click="activeRecordTab = 'active'"
-              :class="{ 'bg-red-500 text-white': activeRecordTab === 'active' }" class="p-2 rounded-l">
+                    :class="{ 'bg-red-500 text-white': activeRecordTab === 'active' }" class="p-2 rounded-l">
               Активные записи
             </button>
             <button @click="activeRecordTab = 'inactive'"
-              :class="{ 'bg-red-500 text-white': activeRecordTab === 'inactive' }" class="p-2 rounded-r">
+                    :class="{ 'bg-red-500 text-white': activeRecordTab === 'inactive' }" class="p-2 rounded-r">
               Неактивные записи
             </button>
           </div>
           <div class="overflow-y-auto max-h-60">
-            <table class="w-full border-collapse ">
+            <table class="w-full border-collapse">
               <thead>
                 <tr>
                   <th class="border-b p-2 text-left">Дата</th>
@@ -79,18 +57,22 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(appointment, index) in filteredAppointments" :key="index"
-                  :class="{ 'text-gray-400': !appointment.active, 'text-black': appointment.active }" class="border-b">
-                  <td class="p-2">{{ appointment.date }}</td>
-                  <td class="p-2">{{ appointment.time }}</td>
-                  <td class="p-2">{{ appointment.master }}</td>
-                  <td class="p-2">{{ appointment.service }}</td>
-                  <td class="p-2">{{ appointment.price }} ₽</td>
-                </tr>
-              </tbody>
+            <tr v-for="(appointment, index) in filteredAppointments" :key="index" class="border-b">
+              <td class="p-2">{{ appointment.date }}</td>
+              <td class="p-2">{{ appointment.time }}</td>
+              <td class="p-2">{{ appointment.worker_name }}</td>
+              <td class="p-2">
+                <ul>
+                  <li v-for="(service, serviceIndex) in appointment.services" :key="serviceIndex">
+                    {{ service.service_name }}
+                  </li>
+                </ul>
+              </td>
+              <td class="p-2">{{ appointment.total_price }} ₽</td>
+            </tr>
+          </tbody>
             </table>
           </div>
-
         </div>
       </div>
     </div>
@@ -98,50 +80,75 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import axios from './../../libs/axios';
+import Profile from './ProfilesComponent/Profile.vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const activeTab = ref('profile'); // Установите активную вкладку по умолчанию
 const activeRecordTab = ref('active'); // Установите активную вкладку записей по умолчанию
-const isEditing = ref(false); // Состояние редактирования
-const userName = ref('Константин Назаров');
-const userEmail = ref('example@example.com');
-const userRole = ref('Гость');
-const userPhone = ref('89069081178');
-const userCity = ref('Кемерово');
-const userLogin = ref('User');
+const userImage = ref(''); // Инициализируем переменную для изображения пользователя
+const userName = ref(''); // Инициализируем переменную для имени пользователя
+const appointments = ref([]); // Список записей пользователя
 
-const appointments = ref([
-  { date: '2024-11-05', time: '20:00', service: 'Стрижка', price: 1000, master: 'Константин Назаров', active: true },
-  { date: '2023-10-02', time: '12:00', service: 'Укладка', price: 800, master: 'Константин Назаров', active: false },
-]);
-
-// Функция для проверки, является ли дата прошедшей
-const isPastDate = (dateString) => {
-  const appointmentDate = new Date(dateString);
-  const currentDate = new Date();
-  return appointmentDate < currentDate;
+const getUserNameFromLocalStorage = () => {
+  const userData = localStorage.getItem('UserData');
+  if (userData) {
+    const parsedData = JSON.parse(userData);
+    return parsedData.user?.name || ''; // Возвращаем имя пользователя или пустую строку
+  }
+  return '';
 };
 
-// Вычисляемое свойство для фильтрации записей
-const filteredAppointments = computed(() => {
-  return appointments.value.filter(appointment => 
-    (activeRecordTab.value === 'active' && appointment.active) || 
-    (activeRecordTab.value === 'inactive' && !appointment.active)
-  );
+const getUserImageFromLocalStorage = () => {
+  const userData = localStorage.getItem('UserData');
+  if (userData) {
+    const parsedData = JSON.parse(userData);
+    if (parsedData.user?.image){
+        return `http://127.0.0.1:8000/storage/${parsedData.user?.image}`
+    }
+    else{
+      return '../../../public/img/default.png'; // Если данных нет, возвращаем путь к default.png
+    }
+  }
+  return './../../public/img/default.png'; // Если данных нет, возвращаем путь к default.png
+};
+
+const fetchAppointments = async () => {
+  const userData = JSON.parse(localStorage.getItem('UserData'));
+  const userId = userData.user?.id;
+
+  if (userId) {
+    try {
+      const response = await axios.get(`api/visitors_records/${userId}`);
+      appointments.value = response.data.response; // Сохраняем записи в appointments
+      console.log(response.data.response);
+    } catch (error) {
+      console.error('Ошибка при получении записей:', error);
+    }
+  }
+};
+
+onMounted(() => {
+  userName.value = getUserNameFromLocalStorage();
+  userImage.value = getUserImageFromLocalStorage();
+  fetchAppointments(); // Получаем записи при монтировании компонента
 });
 
-// Функция для переключения режима редактирования
-const toggleEdit = () => {
-  isEditing.value = !isEditing.value;
-};
+// Фильтрация записей на активные и неактивные
+const filteredAppointments = computed(() => {
+  const today = new Date().toISOString().split('T')[0]; // Получаем сегодняшнюю дату в формате YYYY-MM-DD
 
-// Функция для обработки загрузки файла
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  // Обработка файла (например, загрузка на сервер)
-};
-
-// Сохранение данных пользователя (можно добавить логику для сохранения)
+  if (Array.isArray(appointments.value)) {
+    return appointments.value.filter(appointment => 
+      (activeRecordTab.value === 'active' && appointment.date >= today) || 
+      (activeRecordTab.value === 'inactive' && appointment.date < today)
+    );
+  } else {
+    return []; // Если appointments не массив, возвращаем пустой массив
+  }
+});
 </script>
 
 <style>

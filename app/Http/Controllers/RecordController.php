@@ -145,4 +145,51 @@ class RecordController extends Controller
         return $this->errorResponse('An error occurred while fetching records', 500);
     }
 }
+
+public function VisitorRecords($id)
+{
+    try {
+        // Получаем пользователя по ID
+        $user = User::where('id', $id)->first();
+
+        if (!$user) {
+            return $this->errorResponse('Пользователь не найден', 404);
+        }
+
+        // Получаем записи, соответствующие этому пользователю, включая связи с работниками и услугами
+        $records = Record::with(['worker', 'recordServices.service'])
+            ->where('user_id', $id)
+            ->orderBy('date') // Сортировка по дате
+            ->orderBy('time') // Дополнительная сортировка по времени
+            ->get();
+
+        if ($records->isEmpty()) {
+            return $this->successResponse([], 'No records found for this user');
+        }
+
+        // Формируем массив с записями и добавляем имя работника и услуги
+        $recordsWithDetails = $records->map(function ($record) {
+            $totalPrice = $record->recordServices->sum('total_price'); // Сумма всех услуг в записи
+            return [
+                'id' => $record->id,
+                'date' => $record->date,
+                'time' => $record->time,
+                'worker_name' => $record->worker->user->name ?? 'Неизвестный работник', // Имя работника
+                'services' => $record->recordServices->map(function ($recordService) {
+                    return [
+                        'service_name' => $recordService->service->name ?? 'Неизвестная услуга', // Имя услуги
+                    ];
+                }),
+                'total_price' => $totalPrice // Общая сумма заказа
+            ];
+        });
+
+        return $this->successResponse($recordsWithDetails);
+    } catch (\Exception $e) {
+        // Логируем ошибку для дальнейшего анализа
+        \Log::error('Error fetching users records: ' . $e->getMessage());
+
+        return $this->errorResponse('An error occurred while fetching records', 500);
+    }
+}
 }

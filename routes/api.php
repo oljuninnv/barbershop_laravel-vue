@@ -80,7 +80,8 @@ Route::put('/records/{id}', [RecordController::class,'update']); // Редакт
 Route::get('/records/{id}', [RecordController::class,'show']); // Получение записи по id
 Route::delete('/records/{id}', [RecordController::class,'destroy']); // Удаление записи
 Route::get('/records', [RecordController::class,'index']); // Получение всех записей
-Route::get('/barber_records/{id}', [RecordController::class,'BarberRecords']); // Получение всех записей
+Route::get('/barber_records/{id}', [RecordController::class,'BarberRecords']); // Получение всех записей барбера
+Route::get('/visitors_records/{id}', [RecordController::class,'VisitorRecords']); // Получение всех записей пользователя
 
 //RecordServicesController
 

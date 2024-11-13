@@ -40,8 +40,10 @@ class WorkerController extends Controller
     }
 
     // 3. Получение всех работников с ролью Admin
-    public function getAdmins()
+    public function getAdmins(Request $request)
 {
+    $name = $request->get('name');
+    
     // Получаем пост с ролью 'Admin'
     $post = Post::where('name', 'Admin')->first();
 
@@ -49,10 +51,19 @@ class WorkerController extends Controller
         return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
     }
 
-    // Получаем работников с найденным post_id и загружаем информацию о пользователе
-    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
-        ->where('post_id', $post->id)
-        ->get();
+    // Начинаем запрос для получения работников
+    $query = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+        ->where('post_id', $post->id);
+
+    // Фильтруем по имени пользователя, если оно указано
+    if ($name) {
+        $query->whereHas('user', function ($q) use ($name) {
+            $q->where('name', 'like', "%$name%");
+        });
+    }
+
+    // Получаем работников
+    $admins = $query->get();
 
     // Преобразуем данные для ответа
     $adminsData = $admins->map(function ($worker) {
@@ -65,7 +76,7 @@ class WorkerController extends Controller
             'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
             'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
             'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
-            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
+            'user_city' => $worker->user ? $worker->user->city : null, // Получаем city пользователя
         ];
     });
 
@@ -77,8 +88,10 @@ class WorkerController extends Controller
 }
 
 // 4. Получение всех работников с ролью Barber
-public function getBarbers()
+public function getBarbers(Request $request)
 {
+    $name = $request->get('name');
+    
     // Получаем пост с ролью 'Admin'
     $post = Post::where('name', 'Barber')->first();
 
@@ -86,10 +99,19 @@ public function getBarbers()
         return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
     }
 
-    // Получаем работников с найденным post_id и загружаем информацию о пользователе
-    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
-        ->where('post_id', $post->id)
-        ->get();
+    // Начинаем запрос для получения работников
+    $query = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+        ->where('post_id', $post->id);
+
+    // Фильтруем по имени пользователя, если оно указано
+    if ($name) {
+        $query->whereHas('user', function ($q) use ($name) {
+            $q->where('name', 'like', "%$name%");
+        });
+    }
+
+    // Получаем работников
+    $admins = $query->get();
 
     // Преобразуем данные для ответа
     $adminsData = $admins->map(function ($worker) {
@@ -102,7 +124,7 @@ public function getBarbers()
             'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
             'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
             'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
-            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
+            'user_city' => $worker->user ? $worker->user->city : null, // Получаем city пользователя
         ];
     });
 
@@ -114,77 +136,100 @@ public function getBarbers()
 }
 
     // 5. Получение всех работников с ролью Undefined
-    public function getUndefined()
+    public function getUndefined(Request $request)
     {
+        $name = $request->get('name');
+        
         // Получаем пост с ролью 'Admin'
-    $post = Post::where('name', 'Undefined')->first();
-
-    if (!$post) {
-        return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
-    }
-
-    // Получаем работников с найденным post_id и загружаем информацию о пользователе
-    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
-        ->where('post_id', $post->id)
-        ->get();
-
-    // Преобразуем данные для ответа
-    $adminsData = $admins->map(function ($worker) {
-        return [
-            'worker_id' => $worker->id,
-            'work_experience' => $worker->work_experience,
-            'user_id' => $worker->user_id,
-            'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
-            'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
-            'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
-            'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
-            'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
-            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
-        ];
-    });
-
-    return $this->successResponse(
-        $this->paginate(
-            $adminsData->toArray()
-        )
-    );
+        $post = Post::where('name', 'Undefined')->first();
+    
+        if (!$post) {
+            return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
+        }
+    
+        // Начинаем запрос для получения работников
+        $query = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+            ->where('post_id', $post->id);
+    
+        // Фильтруем по имени пользователя, если оно указано
+        if ($name) {
+            $query->whereHas('user', function ($q) use ($name) {
+                $q->where('name', 'like', "%$name%");
+            });
+        }
+    
+        // Получаем работников
+        $admins = $query->get();
+    
+        // Преобразуем данные для ответа
+        $adminsData = $admins->map(function ($worker) {
+            return [
+                'worker_id' => $worker->id,
+                'work_experience' => $worker->work_experience,
+                'user_id' => $worker->user_id,
+                'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
+                'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
+                'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
+                'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
+                'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
+                'user_city' => $worker->user ? $worker->user->city : null, // Получаем city пользователя
+            ];
+        });
+    
+        return $this->successResponse(
+            $this->paginate(
+                $adminsData->toArray()
+            )
+        );
     }
 
     // 6. Получение всех работников с ролью Staff
-    public function getStaff()
+    public function getStaff(Request $request)
     {
+        $name = $request->get('name');
+        
         // Получаем пост с ролью 'Admin'
-    $post = Post::where('name', 'Staff')->first();
-
-    if (!$post) {
-        return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
+        $post = Post::where('name', 'Staff')->first();
+    
+        if (!$post) {
+            return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
+        }
+    
+        // Начинаем запрос для получения работников
+        $query = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+            ->where('post_id', $post->id);
+    
+        // Фильтруем по имени пользователя, если оно указано
+        if ($name) {
+            $query->whereHas('user', function ($q) use ($name) {
+                $q->where('name', 'like', "%$name%");
+            });
+        }
+    
+        // Получаем работников
+        $admins = $query->get();
+    
+        // Преобразуем данные для ответа
+        $adminsData = $admins->map(function ($worker) {
+            return [
+                'worker_id' => $worker->id,
+                'work_experience' => $worker->work_experience,
+                'user_id' => $worker->user_id,
+                'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
+                'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
+                'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
+                'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
+                'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
+                'user_city' => $worker->user ? $worker->user->city : null, // Получаем city пользователя
+            ];
+        });
+    
+        return $this->successResponse(
+            $this->paginate(
+                $adminsData->toArray()
+            )
+        );
     }
-
-    // Получаем работников с найденным post_id и загружаем информацию о пользователе
-    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
-        ->where('post_id', $post->id)
-        ->get();
-
-    // Преобразуем данные для ответа
-    $adminsData = $admins->map(function ($worker) {
-        return [
-            'worker_id' => $worker->id,
-            'work_experience' => $worker->work_experience,
-            'user_id' => $worker->user_id,
-            'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
-            'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
-            'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
-            'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
-            'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
-            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
-        ];
-    });
-
-    return $this->successResponse(
-        $this->paginate(
-            $adminsData->toArray()
-        )
-    );}
 
     // 7. Обновление определённого работника
     public function update(UpdateWorkerRequest $request, $id)

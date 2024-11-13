@@ -62,167 +62,141 @@
         <button class="btn" @click="nextPage" :disabled="pagination.page === pagination.last_page">Вперед</button>
       </div>
   
-      <!-- Модальное окно для редактирования пользователя -->
-      <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto text-black">
-          <h2>Редактировать пользователя</h2>
-          <div class="flex flex-col gap-2 mt-2">
-            <input v-model="modalUser.name" placeholder="Имя пользователя" class="input_text" />
-            <input v-model="modalUser.login" placeholder="Логин пользователя" class="input_text" />
-            <input v-model="modalUser.email" placeholder="Почта пользователя" class="input_text" />
-            <input v-model="modalUser.phone" placeholder="Телефон пользователя" class="input_text" />
-            <input v-model="modalUser.city" placeholder="Город пользователя" class="input_text" />
-            <input type="date" v-model="modalUser.birthday" placeholder="Дата рождения пользователя" class="input_text" />
-          </div>
-          <div class="mt-2 flex gap-2">
-            <button @click="updateUser()" class="btn">Сохранить</button>
-            <button type="button" @click="closeModal" class="bg-gray-300 hover:bg-gray-400 rounded px-4 py-2">Закрыть</button>
-          </div>
+        <!-- Modal for Editing Worker -->
+        <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto text-black">
+                <h2>Редактировать пользователя</h2>
+                <div class="flex flex-col gap-2 mt-2">
+                    <div class="flex items-center gap-2">
+                        <label for="workExperience">Опыт работы:</label>
+                        <input type="number" id="workExperience" v-model="modalUser.work_experience" min="0" class="input_text w-20" />
+                    </div>
+
+                    <!-- Positions List -->
+                    <div class="flex flex-col gap-2">
+                        <label for="positions">Должности:</label>
+                        <select id="positions" v-model="modalUser.post_id" class="input_text">
+                            <option v-for="post in posts" :key="post.id" :value="post.id">{{ post.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-2 flex gap-2">
+                    <button @click="updateUser()" class="btn">Сохранить</button>
+                    <button type="button" @click="closeModal" class="bg-gray-300 hover:bg-gray-400 rounded px-4 py-2">Закрыть</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
   </template>
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import SearchInput from "../../SearchInput.vue";
   import axios from '../../../libs/axios';
+  import SearchInput from "../../SearchInput.vue";
   
   const users = ref([]);
+  const posts = ref([]); // To store positions
   const loading = ref(false);
   const pagination = ref({
-    page: 1,
-    per_page: 3,
-    total: 0,
-    last_page: 1,
+      page: 1,
+      per_page: 3,
+      total: 0,
+      last_page: 1,
   });
   const isModalOpen = ref(false);
-  const isEditing = ref(false);
-  const modalUser = ref({ id: '', name: '', login: '', email: '', city: '', birthday: '', phone: '' });
+  const modalUser = ref({id: 0, work_experience: 0, post_id: '' });
   
   const loadUsers = async (page = 1, name = null, per_page = pagination.value.per_page) => {
-    try {
-      loading.value = true;
-      const response = await axios.get('/api/get_worker_admin', {
-        params: {
-          page,
-          name,
-          per_page
-        }
-      });
-      users.value = response.data.response.data;
-      pagination.value.total = response.data.response.total;
-      pagination.value.last_page = response.data.response.last_page;
-      loading.value = false;
-    } catch (error) {
-      console.error('Ошибка при загрузке Посетителей:', error);
-    }
+      try {
+          loading.value = true;
+          const response = await axios.get('/api/get_worker_admin', {
+              params: {
+                  page,
+                  name,
+                  per_page
+              }
+          });
+          users.value = response.data.response.data;
+          pagination.value.total = response.data.response.total;
+          pagination.value.last_page = response.data.response.last_page;
+          loading.value = false;
+      } catch (error) {
+          console.error('Ошибка при загрузке Посетителей:', error);
+      }
   };
   
-  onMounted(() => loadUsers());
-  
+  const loadPosts = async () => {
+      try {
+          const response = await axios.get('/api/get_posts'); // Assuming this endpoint returns the list of posts
+          posts.value = response.data.response.data;
+          console.log(posts.value);
+      } catch (error) {
+          console.error('Ошибка при загрузке должностей:', error);
+      }
+  };
+
   const filterUsers = async (query) => {
     await loadUsers(1, query);
   };
   
-  const updateItemsPerPage = (event) => {
-    pagination.value.per_page = parseInt(event.target.value);
-    loadUsers(1);
-  };
-  
-  const prevPage = async () => {
-    if (pagination.value.page > 1) {
-      await loadUsers(pagination.value.page - 1);
-      pagination.value.page--;
-    }
-  };
-  
-  const nextPage = async () => {
-    if (pagination.value.page < pagination.value.last_page) {
-      await loadUsers(pagination.value.page + 1);
-      pagination.value.page++;
-    }
-  };
+  onMounted(() => {
+      loadUsers();
+      loadPosts(); // Load positions when component mounts
+  });
   
   const editUser = (user) => {
-    modalUser.value = { ...user };
-    isEditing.value = true;
-    isModalOpen.value = true;
+    console.log(user);
+    
+      modalUser.value = { ...user };
+      isModalOpen.value = true;
   };
   
   const closeModal = () => {
-    isModalOpen.value = false;
+      isModalOpen.value = false;
   };
   
   const updateUser = async () => {
     const formData = new FormData();
-  
-    // Получаем оригинальные данные пользователя для сравнения
+
+    // Get the original user data for comparison
     const index = users.value.findIndex(user => user.id === modalUser.value.id);
     const originalUserData = users.value[index];
-  
-    // Проверяем, изменились ли данные, и добавляем только измененные
-    if (modalUser.value.name !== originalUserData.name) {
-      formData.append('name', modalUser.value.name);
+    console.log(modalUser.value.worker_id);
+    formData.append('id',modalUser.value.worker_id);
+
+    // Check for changes and append only changed data
+    if (modalUser.value.work_experience !== originalUserData.work_experience) {
+        formData.append('work_experience', modalUser.value.work_experience);
     }
-    if (modalUser.value.email !== originalUserData.email) {
-      formData.append('email', modalUser.value.email);
+    if (modalUser.value.post_id !== originalUserData.post_id) {
+        formData.append('post_id', modalUser.value.post_id);
     }
-    if (modalUser.value.phone !== originalUserData.phone) {
-      formData.append('phone', modalUser.value.phone);
-    }
-    if (modalUser.value.login !== originalUserData.login) {
-      formData.append('login', modalUser.value.login);
-    }
-    if (modalUser.value.city !== originalUserData.city) {
-      formData.append('city', modalUser.value.city);
-    }
-    if (modalUser.value.birthday !== originalUserData.birthday) {
-      formData.append('birthday', modalUser.value.birthday);
-    }
-  
-    // Если есть изображение, добавляем его
-    if (modalUser.value.imageFile) {
-      formData.append('image', modalUser.value.imageFile);
-    }
-  
-    formData.append('_method', 'put'); // Добавляем метод PUT
-  
-    // Если formData пуст, ничего не отправляем
-    if (formData.has('name') || formData.has('email') || formData.has('phone') || 
-        formData.has('login') || formData.has('city') || formData.has('birthday') || 
-        formData.has('image')) {
-      try {
-        const response = await axios.post(`/api/update_user/${modalUser.value.id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        console.log('Данные успешно обновлены:', response.data);
-        
-        // Обновляем данные в массиве пользователей
-        users.value[index] = { ...originalUserData, ...modalUser.value };
-  
-        closeModal(); // Закрываем модальное окно
-        await loadUsers(pagination.value.page); // Перезагружаем пользователей
-      } catch (error) {
-        console.error('Ошибка при обновлении пользователя:', error);
-      }
+
+    formData.append('_method', 'put'); // Specify the PUT method
+
+    // If formData has changes, send the request
+    if (formData.has('work_experience') || formData.has('post_id')) {
+        try {
+            const response = await axios.post(`/api/update_worker/${modalUser.value.worker_id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log('Data successfully updated:', response.data);
+
+            // Update the user data in the users array
+            users.value[index] = { ...originalUserData, ...modalUser.value };
+
+            closeModal(); // Close the modal
+            await loadUsers(pagination.value.page); // Reload users
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
     } else {
-      console.log('Нет изменений для отправки.');
-      closeModal(); // Закрываем модальное окно, если нет изменений
+        console.log('No changes to submit.');
+        closeModal(); // Close the modal if no changes
     }
-  };
-  
-  const removeUser = async (id) => {
-    try {
-      await axios.delete(`/api/delete_user/${id}`);
-      users.value = users.value.filter(user => user.id !== id);
-      await loadUsers(pagination.value.page);
-    } catch (error) {
-      console.error('Ошибка при удалении пользователя:', error);
-    }
-  };
+};
   </script>
   
   <style>

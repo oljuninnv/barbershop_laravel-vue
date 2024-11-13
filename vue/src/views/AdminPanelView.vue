@@ -119,6 +119,10 @@
                 <AdminPost v-if="activeTable === 'posts'" />
                 <Services v-if="activeTable === 'services'" />
                 <Record v-if="activeTable === 'records'" />
+                <Admin v-if="activeTable === 'administrators'" />
+                <Barber v-if="activeTable === 'barbers'" />
+                <Undefined v-if="activeTable === 'undefined_worker'"/>
+                <Staff v-if="activeTable === 'staff'"/>
             </div>
         </div>
     </div>
@@ -138,6 +142,10 @@ import { ref, computed } from 'vue';
   import AdminPost from "./../components/AdminPanel/AdminPosts/AdminPost.vue";
   import Services from "./../components/AdminPanel/AdminServices/Services.vue";
   import Record from "./../components/AdminPanel/AdminRecord/Record.vue";
+  import Admin from "./../components/AdminPanel/AdminWorkers/Admin.vue";
+  import Barber from "./../components/AdminPanel/AdminWorkers/Barber.vue";
+  import Undefined from "./../components/AdminPanel/AdminWorkers/Undefined.vue";
+  import Staff from "./../components/AdminPanel/AdminWorkers/Staff.vue";
 
 const activeTable = ref('');
 

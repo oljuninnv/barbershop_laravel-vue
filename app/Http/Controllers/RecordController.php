@@ -159,35 +159,63 @@ class RecordController extends Controller
         try {
             // Получаем ID поста "Barber"
             $barberPost = Post::where('name', 'Barber')->first();
-
+    
             if (!$barberPost) {
                 return $this->errorResponse('Barber post not found', 404);
             }
-
+    
             $barberPostId = $barberPost->id;
-
+    
             // Проверяем, существует ли работник с переданным ID и постом "Barber"
             $worker = Worker::where('id', $id)->where('post_id', $barberPostId)->first();
-
+    
             if (!$worker) {
                 return $this->errorResponse('Worker not found or does not have the Barber post', 404);
             }
-
+    
             // Получаем записи, соответствующие этому работнику, и сортируем по дате
             $records = Record::where('worker_id', $id)
                 ->orderBy('date') // Сортировка по дате
                 ->orderBy('time') // Дополнительная сортировка по времени, если необходимо
+                ->with(['recordServices.service', 'user']) // Подключаем связанные записи услуг и пользователя
                 ->get();
-
+    
             if ($records->isEmpty()) {
                 return $this->successResponse([], 'No records found for this worker');
             }
-
-            return $this->successResponse($records);
+    
+            // Формируем массив с записями и только названиями услуг
+            $recordsWithServices = $records->map(function ($record) {
+                // Считаем итоговую стоимость
+                $totalPrice = $record->recordServices->sum('total_price');
+    
+                // Извлекаем только необходимые поля из записи
+                $recordData = [
+                    'id' => $record->id,
+                    'user_id' => $record->user_id,
+                    'worker_id' => $record->worker_id,
+                    'worker_name' => $record->worker->user->name, // Получаем имя работника
+                    'date' => $record->date,
+                    'time' => $record->time,
+                    'user_name' => $record->user_name,
+                    'user_phone' => $record->user_phone,
+                    'user_email' => $record->user_email,
+                    'created_at' => $record->created_at,
+                    'updated_at' => $record->updated_at,
+                    'total_price' => $totalPrice, // Итоговая стоимость
+                    'services' => $record->recordServices->map(function ($recordService) {
+                        return $recordService->service->name; // Получаем только имя услуги
+                    })->values(), // Приводим к массиву
+                ];
+    
+                return $recordData; // Возвращаем только нужные данные
+            });
+    
+            return $this->successResponse($recordsWithServices);
         } catch (\Exception $e) {
             // Логируем ошибку для дальнейшего анализа
             \Log::error('Error fetching barber records: ' . $e->getMessage());
-
+    
             return $this->errorResponse('An error occurred while fetching records', 500);
         }
     }

@@ -41,80 +41,150 @@ class WorkerController extends Controller
 
     // 3. Получение всех работников с ролью Admin
     public function getAdmins()
-    {
-        $post = Post::where('name', 'Admin')->first(); // Замените 'role' на фактическое имя столбца
+{
+    // Получаем пост с ролью 'Admin'
+    $post = Post::where('name', 'Admin')->first();
 
-        if (!$post) {
-            return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
-        }
-
-        // Получаем работников с найденным post_id
-        $admins = Worker::where('post_id', $post->id)->get();
-
-        return $this->successResponse(
-            $this->paginate(
-                collect($admins)->toArray()
-            )
-        );
+    if (!$post) {
+        return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
     }
+
+    // Получаем работников с найденным post_id и загружаем информацию о пользователе
+    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+        ->where('post_id', $post->id)
+        ->get();
+
+    // Преобразуем данные для ответа
+    $adminsData = $admins->map(function ($worker) {
+        return [
+            'worker_id' => $worker->id,
+            'work_experience' => $worker->work_experience,
+            'user_id' => $worker->user_id,
+            'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
+            'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
+            'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
+            'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
+            'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
+            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
+        ];
+    });
+
+    return $this->successResponse(
+        $this->paginate(
+            $adminsData->toArray()
+        )
+    );
+}
 
 // 4. Получение всех работников с ролью Barber
 public function getBarbers()
-    {
-        $post = Post::where('name', 'Barber')->first();
+{
+    // Получаем пост с ролью 'Admin'
+    $post = Post::where('name', 'Barber')->first();
 
-        if (!$post) {
-            return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
-        }
-
-        // Получаем работников с найденным post_id
-        $barbers = Worker::where('post_id', $post->id)->get();
-
-        return $this->successResponse(
-            $this->paginate(
-                collect($barbers)->toArray()
-            )
-        );
+    if (!$post) {
+        return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
     }
+
+    // Получаем работников с найденным post_id и загружаем информацию о пользователе
+    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+        ->where('post_id', $post->id)
+        ->get();
+
+    // Преобразуем данные для ответа
+    $adminsData = $admins->map(function ($worker) {
+        return [
+            'worker_id' => $worker->id,
+            'work_experience' => $worker->work_experience,
+            'user_id' => $worker->user_id,
+            'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
+            'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
+            'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
+            'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
+            'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
+            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
+        ];
+    });
+
+    return $this->successResponse(
+        $this->paginate(
+            $adminsData->toArray()
+        )
+    );
+}
 
     // 5. Получение всех работников с ролью Undefined
     public function getUndefined()
     {
-        // Находим пост с 'Undefined'
-        $post = Post::where('name', 'Undefined')->first(); // Замените 'column_name' на фактическое имя столбца
+        // Получаем пост с ролью 'Admin'
+    $post = Post::where('name', 'Undefined')->first();
 
-        if (!$post) {
-            return response()->json(['error' => 'Пост с указанным значением не найден.'], 404);
-        }
+    if (!$post) {
+        return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
+    }
 
-        // Получаем работников с найденным post_id
-        $undefinedWorkers = Worker::where('post_id', $post->id)->get();
+    // Получаем работников с найденным post_id и загружаем информацию о пользователе
+    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+        ->where('post_id', $post->id)
+        ->get();
 
-        return $this->successResponse(
-            $this->paginate(
-                collect($undefinedWorkers)->toArray()
-            )
-        );
+    // Преобразуем данные для ответа
+    $adminsData = $admins->map(function ($worker) {
+        return [
+            'worker_id' => $worker->id,
+            'work_experience' => $worker->work_experience,
+            'user_id' => $worker->user_id,
+            'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
+            'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
+            'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
+            'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
+            'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
+            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
+        ];
+    });
+
+    return $this->successResponse(
+        $this->paginate(
+            $adminsData->toArray()
+        )
+    );
     }
 
     // 6. Получение всех работников с ролью Staff
     public function getStaff()
     {
-        $post = Post::where('name', 'Staff')->first(); // Замените 'role' на фактическое имя столбца
+        // Получаем пост с ролью 'Admin'
+    $post = Post::where('name', 'Staff')->first();
 
-        if (!$post) {
-            return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
-        }
-
-        // Получаем работников с найденным post_id
-        $staff = Worker::where('post_id', $post->id)->get();
-
-        return $this->successResponse(
-            $this->paginate(
-                collect($staff)->toArray()
-            )
-        );
+    if (!$post) {
+        return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
     }
+
+    // Получаем работников с найденным post_id и загружаем информацию о пользователе
+    $admins = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+        ->where('post_id', $post->id)
+        ->get();
+
+    // Преобразуем данные для ответа
+    $adminsData = $admins->map(function ($worker) {
+        return [
+            'worker_id' => $worker->id,
+            'work_experience' => $worker->work_experience,
+            'user_id' => $worker->user_id,
+            'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
+            'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
+            'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
+            'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
+            'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
+            'user_city' => $worker->user ? $worker->user->city : null, // Получаем login пользователя
+        ];
+    });
+
+    return $this->successResponse(
+        $this->paginate(
+            $adminsData->toArray()
+        )
+    );}
 
     // 7. Обновление определённого работника
     public function update(UpdateWorkerRequest $request, $id)

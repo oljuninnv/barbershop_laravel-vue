@@ -115,8 +115,10 @@
                 <AdminCreateUser v-if="activeTable === 'add_visitors'" />
                 <AdminUserWorkers v-if="activeTable === 'worker_visitors'" />
                 <AdminUser v-if="activeTable === 'visitors'" />
-                <AdminWorkPositionsTable v-if="activeTable === 'work-positions'" />
-                <AdminTable v-if="activeTable === 'admins'" />
+                <GenerateRecords v-if="activeTable === 'generate_records'" />
+                <AdminPost v-if="activeTable === 'posts'" />
+                <Services v-if="activeTable === 'services'" />
+                <Record v-if="activeTable === 'records'" />
             </div>
         </div>
     </div>
@@ -132,13 +134,17 @@ import { ref, computed } from 'vue';
   import AdminUser from "./../components/AdminPanel/AdminUsers/AdminUser.vue";
   import AdminCreateUser from "./../components/AdminPanel/AdminUsers/AdminCreateUser.vue";
   import AdminUserWorkers from "./../components/AdminPanel/AdminUsers/AdminUserWorkers.vue";
+  import GenerateRecords from "./../components/AdminPanel/AdminCreateRecords/GenerateRecords.vue";
+  import AdminPost from "./../components/AdminPanel/AdminPosts/AdminPost.vue";
+  import Services from "./../components/AdminPanel/AdminServices/Services.vue";
+  import Record from "./../components/AdminPanel/AdminRecord/Record.vue";
 
 const activeTable = ref('');
 
 // Получаем данные о пользователе из localStorage
 const userData = JSON.parse(localStorage.getItem('UserData'));
 const isAdmin = computed(() => {
-    return userData && userData.roles && userData.roles.includes('Admin');
+    return userData && userData.worker.post && userData.worker.post.name =='Admin';
 });
 
 const isDropdownVisible = ref(false);

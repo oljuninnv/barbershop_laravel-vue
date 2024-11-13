@@ -21,7 +21,8 @@
             <div
               class="service-card flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4"
               v-for="service in services" :key="service.id">
-              <img class="rounded-t-lg h-[80px] mr-4" :src="service.image" :alt="service.name" />
+              <img v-if="service.image" class="rounded-t-lg h-[80px] mr-4" :src="service.image" :alt="service.name" />
+              <img v-if="!service.image" class="rounded-t-lg h-[80px] mr-4" src="../../public/img/styling.svg" :alt="service.name" />
               <div class="flex flex-col justify-between w-full">
                 <h5 class="mb-2 text-xl font-medium leading-tight">{{ service.name }}</h5>
                 <div class="text-[18px]">{{ service.price }} Руб</div>
@@ -87,7 +88,6 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from '../libs/axios'; 
 
-const userId = ref('null');
 const router = useRouter();
 const barbers = ref([]);
 const services = ref([]);

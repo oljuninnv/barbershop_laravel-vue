@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
+use App\Models\Worker;
 
 class PostController extends Controller
 {
@@ -84,5 +85,28 @@ class PostController extends Controller
 
         $post->delete();
         return response()->json(['message' => 'Должность успешно удалена.']);
+    }
+
+    public function information($id) {
+        // Находим должность по ID
+        $post = Post::find($id);
+        if (!$post) {
+            return response()->json(['error' => 'Должность не найдена.'], 404);
+        }
+    
+        // Получаем количество сотрудников с данной должностью
+        $employeeCount = Worker::where('post_id', $id)->count();
+    
+        // Получаем список имен сотрудников
+        $employeeNames = Worker::where('post_id', $id)
+            ->join('users', 'workers.user_id', '=', 'users.id')
+            ->pluck('users.name');
+    
+        // Формируем ответ
+        return response()->json([
+            'post_name' => $post->name,
+            'employee_count' => $employeeCount,
+            'employee_names' => $employeeNames
+        ]);
     }
 }

@@ -35,23 +35,39 @@ class UserController extends Controller
 
     // 2. Получение всех пользователей, которые являются сотрудниками +
     public function getWorkers(Request $request)
-    {
-        $name = $request->get('name');
+{
+    $name = $request->get('name');
 
-        $query = User::whereHas('worker');
+    // Получаем пользователей, у которых есть связанные работники
+    $query = User::whereHas('worker');
 
-        if ($name) {
-            $query->where('name', 'like', "%$name%");
-        }
-
-        $users = $query->get();
-
-        return $this->successResponse(
-            $this->paginate(
-                collect($users)->toArray()
-            )
-        );
+    if ($name) {
+        // Фильтруем по имени пользователя
+        $query->where('name', 'like', "%$name%");
     }
+
+    // Получаем пользователей с их работниками и постами
+    $users = $query->with(['worker.post'])->get();
+
+    // Формируем массив с данными пользователей и именами постов
+    $result = $users->map(function ($user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'city' => $user->city,
+            'birthday' => $user->birthday,
+            'post_name' => $user->worker->post ? $user->worker->post->name : null,
+        ];
+    });
+
+    return $this->successResponse(
+        $this->paginate(
+            $result->toArray()
+        )
+    );
+}
 
     // 3. Обновление данных пользователя +
     public function update(UpdateUserRequest $request, $id)

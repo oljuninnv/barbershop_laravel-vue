@@ -13,9 +13,9 @@
       <div class="flex flex-col mt-4 w-full">
         <Profile />
       </div>
-      <button @click="goToAdminPanel" class="bg-red-500 text-white p-2 rounded mt-4 w-full">
+      <router-link to="/admin" class="bg-red-500 text-white p-2 text-center rounded mt-4 w-full">
         Перейти в админ-панель
-      </button>
+      </router-link>
       <router-link to="/" class="bg-black text-white p-2 rounded mt-4 w-full text-center">
         На главную страницу
       </router-link>

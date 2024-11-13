@@ -48,6 +48,7 @@ Route::delete('/delete_user/{id}',[UserController::class,'destroy']);
 
 Route::get('/get_posts',[PostController::class,'index']);
 Route::get('/get_post/{id}',[PostController::class,'show']);
+Route::get('/get_post_information/{id}',[PostController::class,'information']);
 Route::post('/add_post',[PostController::class,'store']);
 Route::put('/update_post/{id}',[PostController::class,'update']);
 Route::delete('/delete_post/{id}',[PostController::class,'destroy']);

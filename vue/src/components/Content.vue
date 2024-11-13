@@ -52,7 +52,8 @@
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <div v-for="service in services" :key="service.id" class="flex rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white p-4">
-            <img :src="service.image" alt="Услуга" class="rounded-t-lg h-[80px] w-[40px] mr-4" />
+            <img v-if="service.image" :src="service.image" alt="Услуга" class="rounded-t-lg h-[80px] w-[40px] mr-4" />
+            <img v-if="!service.image" src="../../public/img/styling.svg" alt="Услуга" class="rounded-t-lg h-[80px] w-[40px] mr-4"/>
             <div class="flex flex-col justify-between w-full">
                 <h5 class="mb-2 text-xl font-medium leading-tight">{{ service.name }}</h5>
                 <div class="text-[18px]">{{ service.price }} Руб</div>

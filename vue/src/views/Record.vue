@@ -140,14 +140,22 @@ const fetchAvailableRecords = async (workerId) => {
         worker_id: selectedBarber.value,
       }
     });
+    
+    // Очищаем массив times перед обновлением
+    times.value = [];
     records.value = response.data;
-    times.value = response.data.map(element => element.time); // Обновляем доступные времена
+
+    // Получаем уникальные времена
+    const Times = [...new Set(response.data.map(element => element.time))];
+    times.value = Times; // Обновляем доступные времена
+    times.value.sort();
+
     takenTimes.value = []; // Очищаем занятые времена
     selectedTime.value = null; // Сбрасываем выбранное время
   } catch (error) {
     console.error('Ошибка при загрузке доступных записей:', error);
   }
-};
+}
 
 watch([() => selectedBarber.value, () => selectedDate.value], () => {
   console.log(selectedBarber.value);

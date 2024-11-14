@@ -23,7 +23,7 @@
                         <td v-for="day in days" :key="day" class="border-b p-2" @click="showModal(currentWeekSchedule[day]?.[time])">
                             <span v-if="getTimeStatus(currentWeekSchedule[day]?.[time]) == 'Занято'" class="text-red-500 cursor-pointer">{{ getTimeStatus(currentWeekSchedule[day]?.[time]) }}</span>
                             <span v-if="getTimeStatus(currentWeekSchedule[day]?.[time]) == 'Свободно'" class="text-green-500 cursor-pointer">{{ getTimeStatus(currentWeekSchedule[day]?.[time]) }}</span>
-                            <span v-else class="text-gray-500"> </span>
+                            <span v-else> </span>
                         </td>
                     </tr>
                 </tbody>
@@ -44,10 +44,8 @@
                     <tr v-for="time in times" :key="time">
                         <td class="border-b p-2">{{ time }}</td>
                         <td v-for="day in days" :key="day" class="border-b p-2" @click="showModal(nextWeekSchedule[day]?.[time])">
-                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) == 'Занято'"
-                                class="text-red-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time]) }}</span>
-                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) == 'Свободно'"
-                                class="text-green-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time]) }}</span>
+                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) === 'Занято'" class="text-red-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time]) }} </span>
+                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) === 'Свободно'" class="text-green-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time]) }}</span>
                             <span v-else class="text-gray-500"> </span>
                         </td>
                     </tr>
@@ -132,6 +130,9 @@ const currentWeekEnd = computed(() => {
 const nextWeekStart = computed(() => {
     const start = new Date(currentWeekEnd.value);
     start.setDate(start.getDate() + 1); // Начало следующей недели
+    console.log(start);
+    start.setHours(0)
+    start.setMinutes(0)
     return start;
 });
 
@@ -171,9 +172,13 @@ const fetchSchedule = async () => {
             if (isCurrentWeek(recordDate)) {
                 currentWeekSchedule.value[day] = currentWeekSchedule.value[day] || {};
                 currentWeekSchedule.value[day][time] = record;
+                console.log(currentWeekSchedule.value[day][time]);
             } else if (isNextWeek(recordDate)) {
+                console.log(recordDate);
+                
                 nextWeekSchedule.value[day] = nextWeekSchedule.value[day] || {};
                 nextWeekSchedule.value[day][time] = record;
+                console.log(nextWeekSchedule.value[day][time]);
             }
         });
     } catch (error) {

@@ -76,25 +76,35 @@
   }
 };
   
-  const addAppointment = async () => {
-    if (selectedDate.value && selectedTimes.value.length > 0) {
-      try {
-        const response = await axios.post('/api/generate-records', {
-          worker_id: selectedBarber.value, // Используем worker_id из localStorage
-          date: selectedDate.value,
-          times: selectedTimes.value,
-        });
-        modalMessage.value = response.data.message;
-        modalVisible.value = true;
-        resetForm();
-      } catch (error) {
-        modalMessage.value = error.response?.data?.message || 'Произошла ошибка при добавлении записи.';
-        modalVisible.value = true;
-      }
-    } else {
-      alert('Пожалуйста, выберите дату и хотя бы одно время.');
+const addAppointment = async () => {
+  const today = new Date();
+  const selected = new Date(selectedDate.value);
+
+  // Проверяем, выбрана ли прошедшая дата
+  if (selected < today) {
+    modalMessage.value = 'Генерация записи может быть произведена в текущую или будущие даты.';
+    modalVisible.value = true;
+    return;
+  }
+
+  if (selectedDate.value && selectedTimes.value.length > 0) {
+    try {
+      const response = await axios.post('/api/generate-records', {
+        worker_id: selectedBarber.value,
+        date: selectedDate.value,
+        times: selectedTimes.value,
+      });
+      modalMessage.value = response.data.message;
+      modalVisible.value = true;
+      resetForm();
+    } catch (error) {
+      modalMessage.value = error.response?.data?.message || 'Произошла ошибка при добавлении записи.';
+      modalVisible.value = true;
     }
-  };
+  } else {
+    alert('Пожалуйста, выберите дату и хотя бы одно время.');
+  }
+};
   
   const resetForm = () => {
     selectedDate.value = '';

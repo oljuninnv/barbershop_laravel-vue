@@ -55,10 +55,20 @@ onMounted(() => {
 });
 
 const addAppointment = async () => {
+  const today = new Date();
+  const selected = new Date(selectedDate.value);
+
+  // Проверяем, выбрана ли прошедшая дата
+  if (selected < today) {
+    modalMessage.value = 'Генерация записи может быть произведена в текущую или будущие даты.';
+    modalVisible.value = true;
+    return;
+  }
+
   if (selectedDate.value && selectedTimes.value.length > 0) {
     try {
       const response = await axios.post('/api/generate-records', {
-        worker_id: workerId.value, // Используем worker_id из localStorage
+        worker_id: workerId.value,
         date: selectedDate.value,
         times: selectedTimes.value,
       });

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use Carbon\Carbon;
 use App\Models\Worker;
 use App\Models\Post;
 use App\Http\Requests\WorkerRequest;
@@ -67,9 +67,13 @@ class WorkerController extends Controller
 
     // Преобразуем данные для ответа
     $adminsData = $admins->map(function ($worker) {
+        // Рассчитываем опыт работы в годах
+        $workExperience = $worker->adopted_at ? Carbon::parse($worker->adopted_at)->diffInYears(Carbon::now()) : null;
+
         return [
             'worker_id' => $worker->id,
-            'work_experience' => $worker->work_experience,
+            'work_experience' => $workExperience, // Используем рассчитанный опыт работы
+            'adopted_at' => $worker->adopted_at, 
             'user_id' => $worker->user_id,
             'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
             'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
@@ -111,13 +115,17 @@ public function getBarbers(Request $request)
     }
 
     // Получаем работников
-    $admins = $query->get();
+    $barbers = $query->get();
 
     // Преобразуем данные для ответа
-    $adminsData = $admins->map(function ($worker) {
+    $barbersData = $barbers->map(function ($worker) {
+        // Рассчитываем опыт работы в годах
+        $workExperience = $worker->adopted_at ? Carbon::parse($worker->adopted_at)->diffInYears(Carbon::now()) : null;
+
         return [
             'worker_id' => $worker->id,
-            'work_experience' => $worker->work_experience,
+            'work_experience' => $workExperience, // Используем рассчитанный опыт работы
+            'adopted_at' => $worker->adopted_at, 
             'user_id' => $worker->user_id,
             'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
             'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
@@ -130,7 +138,7 @@ public function getBarbers(Request $request)
 
     return $this->successResponse(
         $this->paginate(
-            $adminsData->toArray()
+            $barbersData->toArray()
         )
     );
 }
@@ -159,13 +167,17 @@ public function getBarbers(Request $request)
         }
     
         // Получаем работников
-        $admins = $query->get();
+        $undefineds = $query->get();
     
         // Преобразуем данные для ответа
-        $adminsData = $admins->map(function ($worker) {
+        $undefinedsData = $undefineds->map(function ($worker) {
+            // Рассчитываем опыт работы в годах
+            $workExperience = $worker->adopted_at ? Carbon::parse($worker->adopted_at)->diffInYears(Carbon::now()) : null;
+    
             return [
                 'worker_id' => $worker->id,
-                'work_experience' => $worker->work_experience,
+                'work_experience' => $workExperience, // Используем рассчитанный опыт работы
+                'adopted_at' => $worker->adopted_at, 
                 'user_id' => $worker->user_id,
                 'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
                 'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
@@ -178,7 +190,7 @@ public function getBarbers(Request $request)
     
         return $this->successResponse(
             $this->paginate(
-                $adminsData->toArray()
+                $undefinedsData->toArray()
             )
         );
     }
@@ -207,13 +219,17 @@ public function getBarbers(Request $request)
         }
     
         // Получаем работников
-        $admins = $query->get();
+        $staffs = $query->get();
     
         // Преобразуем данные для ответа
-        $adminsData = $admins->map(function ($worker) {
+        $staffsData = $staffs->map(function ($worker) {
+            // Рассчитываем опыт работы в годах
+            $workExperience = $worker->adopted_at ? Carbon::parse($worker->adopted_at)->diffInYears(Carbon::now()) : null;
+    
             return [
                 'worker_id' => $worker->id,
-                'work_experience' => $worker->work_experience,
+                'work_experience' => $workExperience, // Используем рассчитанный опыт работы
+                'adopted_at' => $worker->adopted_at, 
                 'user_id' => $worker->user_id,
                 'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
                 'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
@@ -226,7 +242,7 @@ public function getBarbers(Request $request)
     
         return $this->successResponse(
             $this->paginate(
-                $adminsData->toArray()
+                $staffsData->toArray()
             )
         );
     }
@@ -245,8 +261,8 @@ public function getBarbers(Request $request)
             $worker->user_id = $values['user_id'];
         }
 
-        if ($request->has('work_experience')) {
-            $worker->work_experience = $values['work_experience'];
+        if ($request->has('adopted_at')) {
+            $worker->adopted_at = $values['adopted_at'];
         }
 
         if ($request->has('post_id')) {
@@ -290,32 +306,35 @@ public function getBarbers(Request $request)
     }
 
     // 4. Получение всех работников с ролью Barber
-public function getBarbersForMainPage()
-{
-   // Находим пост с названием 'Barber'
-   $post = Post::where('name', 'Barber')->first();
-
-   if (!$post) {
-       return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
-   }
-
-   // Получаем работников с найденным post_id и загружаем связанные данные из таблицы User
-   $barbers = Worker::with('user:id,name,image') // Загружаем только необходимые поля
-       ->where('post_id', $post->id)
-       ->get();
-
-   // Преобразуем данные для ответа
-   $barberData = $barbers->map(function ($worker) {
-       return [
-           'id' => $worker->id,
-           'name' => $worker->user->name,
-           'image' => $worker->user->image,
-           'work_experience' => $worker->work_experience,
-       ];
-   });
-
-   return $this->successResponse(
-       $this->paginate($barberData->toArray())
-   );
-}
+    public function getBarbersForMainPage()
+    {
+        // Находим пост с названием 'Barber'
+        $post = Post::where('name', 'Barber')->first();
+    
+        if (!$post) {
+            return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
+        }
+    
+        // Получаем работников с найденным post_id и загружаем связанные данные из таблицы User
+        $barbers = Worker::with('user:id,name,image') // Загружаем только необходимые поля
+            ->where('post_id', $post->id)
+            ->get();
+    
+        // Преобразуем данные для ответа
+        $barberData = $barbers->map(function ($worker) {
+            // Рассчитываем опыт работы в годах
+            $workExperience = $worker->adopted_at ? Carbon::parse($worker->adopted_at)->diffInYears(Carbon::now()) : null;
+    
+            return [
+                'id' => $worker->id,
+                'name' => $worker->user->name,
+                'image' => $worker->user->image,
+                'work_experience' => $workExperience, // Используем рассчитанный опыт работы
+            ];
+        });
+    
+        return $this->successResponse(
+            $this->paginate($barberData->toArray())
+        );
+    }
 }

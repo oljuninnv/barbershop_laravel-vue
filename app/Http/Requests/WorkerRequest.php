@@ -25,6 +25,7 @@ class WorkerRequest extends FormRequest
     {
         return [
             'work_experience' => 'required|numeric|min:0|max:100',
+            'adopted_at' => 'nullable|date|before_or_equal:today',
         ];
     }
 
@@ -35,6 +36,8 @@ class WorkerRequest extends FormRequest
             'work_experience.numeric' => 'Опыт работы является числом',
             'work_experience.min' => 'Опыт работы не должен быть меньше 0',
             'work_experience.max' => 'Опыт работы не должен быть больше 100',
+            'adopted_at.date' => 'Поле adopted_at должно быть корректной датой.',
+            'adopted_at.before_or_equal' => 'Дата принятия должна быть сегодня или в прошлом.',
         ];
     }
 

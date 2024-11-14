@@ -31,7 +31,6 @@
             <th class="px-6 py-3">Город</th>
             <th class="px-6 py-3">Телефон</th>
             <th class="px-6 py-3">День рождения</th>
-            <th class="px-6 py-3">Опыт работы</th>
             <th class="px-6 py-3">Действия</th>
           </tr>
         </thead>
@@ -42,10 +41,6 @@
             <td class="px-6 py-3">{{ user.user_city }}</td>
             <td class="px-6 py-3">{{ user.user_phone }}</td>
             <td class="px-6 py-3">{{ user.user_birthday }}</td>
-            <td class="px-6 py-3">
-                  {{ user.work_experience }} 
-                  {{ user.work_experience > 0 && user.work_experience < 5 ? 'года' : 'лет' }}
-              </td>
             <td class="flex gap-5 text-right px-6 py-3">
               <button @click="editUser(user)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
               <button @click="removeUser(user.user_id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</button>
@@ -67,11 +62,6 @@
           <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto text-black">
               <h2>Редактировать пользователя</h2>
               <div class="flex flex-col gap-2 mt-2">
-                  <div class="flex items-center gap-2">
-                      <label for="workExperience">Опыт работы:</label>
-                      <input type="number" id="workExperience" v-model="modalUser.work_experience" min="0" class="input_text w-20" />
-                  </div>
-
                   <!-- Positions List -->
                   <div class="flex flex-col gap-2">
                       <label for="positions">Должности:</label>
@@ -104,7 +94,7 @@ const pagination = ref({
     last_page: 1,
 });
 const isModalOpen = ref(false);
-const modalUser = ref({id: 0, work_experience: 0, post_id: '' });
+const modalUser = ref({id: 0, post_id: '' });
 
 const loadUsers = async (page = 1, name = null, per_page = pagination.value.per_page) => {
     try {
@@ -165,9 +155,6 @@ const updateUser = async () => {
   formData.append('id',modalUser.value.worker_id);
 
   // Check for changes and append only changed data
-  if (modalUser.value.work_experience !== originalUserData.work_experience) {
-      formData.append('work_experience', modalUser.value.work_experience);
-  }
   if (modalUser.value.post_id !== originalUserData.post_id) {
       formData.append('post_id', modalUser.value.post_id);
   }
@@ -175,7 +162,8 @@ const updateUser = async () => {
   formData.append('_method', 'put'); // Specify the PUT method
 
   // If formData has changes, send the request
-  if (formData.has('work_experience') || formData.has('post_id')) {
+  if (formData.has('post_id')) {
+    console.log(formData.has('post_id'));
       try {
           const response = await axios.post(`/api/update_worker/${modalUser.value.worker_id}`, formData, {
               headers: {

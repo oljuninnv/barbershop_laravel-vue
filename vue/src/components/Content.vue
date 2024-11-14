@@ -75,12 +75,14 @@
             :alt="worker.name" />
         <img v-else
             class="rounded-t-lg w-full h-full object-cover"
-            :src="/public/img/barbers/barber3.svg" 
+            :src="`/public/img/barbers/barber3.svg`" 
             :alt="worker.name" /> 
 
         <div class="p-6 flex-grow flex flex-col justify-center items-center">
             <h5 class="mb-2 text-xl font-medium leading-tight text-center">{{ worker.name }}</h5>
-            <p class="mb-4 text-base text-center">Стаж: {{ worker.work_experience }} лет</p>
+            <p class="mb-4 text-base text-center">
+                Стаж: {{ worker.work_experience }} {{ worker.work_experience < 5 || worker.work_experience == 0 ? 'года' : 'лет' }}
+            </p>
         </div>
     </div>
 </div>

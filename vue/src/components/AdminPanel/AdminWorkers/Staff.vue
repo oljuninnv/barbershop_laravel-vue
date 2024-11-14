@@ -31,7 +31,7 @@
             <th class="px-6 py-3">Город</th>
             <th class="px-6 py-3">Телефон</th>
             <th class="px-6 py-3">День рождения</th>
-            <th class="px-6 py-3">Опыт работы</th>
+            <th class="px-6 py-3">Дата принятия на работу</th>
             <th class="px-6 py-3">Действия</th>
           </tr>
         </thead>
@@ -67,10 +67,10 @@
           <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto text-black">
               <h2>Редактировать пользователя</h2>
               <div class="flex flex-col gap-2 mt-2">
-                  <div class="flex items-center gap-2">
-                      <label for="workExperience">Опыт работы:</label>
-                      <input type="number" id="workExperience" v-model="modalUser.work_experience" min="0" class="input_text w-20" />
-                  </div>
+                <div class="flex items-center gap-2">
+                    <label for="adoptedAt">Дата принятия на работу:</label>
+                    <input type="date" id="adoptedAt" v-model="modalUser.adopted_at" @change="calculateWorkExperience" class="input_text" />
+                </div>
 
                   <!-- Positions List -->
                   <div class="flex flex-col gap-2">
@@ -104,7 +104,7 @@ const pagination = ref({
     last_page: 1,
 });
 const isModalOpen = ref(false);
-const modalUser = ref({id: 0, work_experience: 0, post_id: '' });
+const modalUser = ref({id: 0, post_id: '',adopted_at:'' });
 
 const loadUsers = async (page = 1, name = null, per_page = pagination.value.per_page) => {
     try {
@@ -165,8 +165,8 @@ const updateUser = async () => {
   formData.append('id',modalUser.value.worker_id);
 
   // Check for changes and append only changed data
-  if (modalUser.value.work_experience !== originalUserData.work_experience) {
-      formData.append('work_experience', modalUser.value.work_experience);
+  if (modalUser.value.adopted_at !== originalUserData.adopted_at) {
+      formData.append('adopted_at', modalUser.value.adopted_at);
   }
   if (modalUser.value.post_id !== originalUserData.post_id) {
       formData.append('post_id', modalUser.value.post_id);
@@ -175,7 +175,7 @@ const updateUser = async () => {
   formData.append('_method', 'put'); // Specify the PUT method
 
   // If formData has changes, send the request
-  if (formData.has('work_experience') || formData.has('post_id')) {
+  if (formData.has('adopted_at') || formData.has('post_id')) {
       try {
           const response = await axios.post(`/api/update_worker/${modalUser.value.worker_id}`, formData, {
               headers: {

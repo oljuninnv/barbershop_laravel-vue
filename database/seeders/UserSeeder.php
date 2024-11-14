@@ -131,9 +131,15 @@ class UserSeeder extends Seeder
 
         // Создаем работников для случайных пользователей
         for ($i = 0; $i < $numberOfWorkers; $i++) {
+            // Генерируем случайную дату между 2018-01-01 и 2024-12-31
+            $startDate = strtotime('2018-01-01');
+            $endDate = strtotime('2024-12-31');
+            $randomTimestamp = mt_rand($startDate, $endDate);
+            $randomDate = date('Y-m-d H:i:s', $randomTimestamp); // Форматируем дату
+
             DB::table('workers')->insert([
                 'user_id' => $userIds[$i], // Берем случайного пользователя
-                'work_experience' => rand(0, 10), // Случайный опыт работы от 0 до 10 лет
+                'adopted_at' => $randomDate, // Устанавливаем случайную дату
                 'post_id' => $postIds[$i], // Назначаем должность
             ]);
         }

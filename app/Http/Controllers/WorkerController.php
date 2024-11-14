@@ -285,7 +285,7 @@ public function getBarbers(Request $request)
 
         $worker = new Worker();
         $worker->user_id = $values['user_id'];
-        $worker->work_experience = $values['work_experience'];
+        $worker->adopted_at = $values['adopted_at'];
         $worker->post_id = $values['post_id'];
 
         $worker->save();

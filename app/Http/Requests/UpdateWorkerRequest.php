@@ -24,16 +24,15 @@ class UpdateWorkerRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_experience' => 'numeric|min:0|max:100',
+            'adopted_at' => 'date|before_or_equal:today',
         ];
     }
 
     public function messages()
     {
         return [
-            'work_experience.numeric' => 'Опыт работы является числом',
-            'work_experience.min' => 'Опыт работы не должен быть меньше 0',
-            'work_experience.max' => 'Опыт работы не должен быть больше 100',
+            'adopted_at.date' => 'Поле adopted_at должно быть корректной датой.',
+            'adopted_at.before_or_equal' => 'Дата принятия должна быть сегодня или в прошлом.',
         ];
     }
 

@@ -146,9 +146,28 @@ const fetchAvailableRecords = async (workerId) => {
     records.value = response.data;
 
     // Получаем уникальные времена
-    const Times = [...new Set(response.data.map(element => element.time))];
-    times.value = Times; // Обновляем доступные времена
-    times.value.sort();
+    const allTimes = [...new Set(response.data.map(element => element.time))];
+
+    // Получаем текущую дату
+    const currentDate = new Date();
+    const selectedDateObj = new Date(selectedDate.value);
+
+    // Фильтруем времена в зависимости от выбранной даты
+    if (selectedDateObj < currentDate) {
+      // Если выбрана прошедшая дата, не выводим время
+      times.value = []; // Очищаем времена
+    } else if (selectedDateObj.toDateString() === currentDate.toDateString()) {
+      // Если выбрана текущая дата, не выводим прошедшее время
+      times.value = allTimes.filter(time => {
+        const timeDate = new Date(`${selectedDate.value}T${time}`);
+        return timeDate >= currentDate; // Оставляем только будущие времена
+      });
+    } else {
+      // Если выбрана будущая дата, выводим все времена
+      times.value = allTimes;
+    }
+
+    times.value.sort(); // Сортируем доступные времена
 
     takenTimes.value = []; // Очищаем занятые времена
     selectedTime.value = null; // Сбрасываем выбранное время

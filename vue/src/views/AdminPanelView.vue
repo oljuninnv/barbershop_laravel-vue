@@ -61,6 +61,10 @@
                                 class="block px-4 py-2 font-medium rounded-lg text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">Обслуживающий персонал</a>
                         </li>
                         <li>
+                            <a href="#" @click.prevent="showTable('accountant')"
+                                class="block px-4 py-2 font-medium rounded-lg text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">Бухгалтеры</a>
+                        </li>
+                        <li>
                             <a href="#" @click.prevent="showTable('undefined_worker')"
                                 class="block px-4 py-2 font-medium rounded-lg text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">Не определённые работники</a>
                         </li>
@@ -123,6 +127,7 @@
                 <Barber v-if="activeTable === 'barbers'" />
                 <Undefined v-if="activeTable === 'undefined_worker'"/>
                 <Staff v-if="activeTable === 'staff'"/>
+                <Accountant v-if="activeTable === 'accountant'"/>
             </div>
         </div>
     </div>
@@ -146,6 +151,7 @@ import { ref, computed } from 'vue';
   import Barber from "./../components/AdminPanel/AdminWorkers/Barber.vue";
   import Undefined from "./../components/AdminPanel/AdminWorkers/Undefined.vue";
   import Staff from "./../components/AdminPanel/AdminWorkers/Staff.vue";
+  import Accountant from "./../components/AdminPanel/AdminWorkers/Accountant.vue";
 
 const activeTable = ref('');
 

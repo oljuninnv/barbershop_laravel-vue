@@ -91,6 +91,57 @@ class WorkerController extends Controller
     );
 }
 
+public function getAccountants(Request $request)
+{
+    $name = $request->get('name');
+    
+    // Получаем пост с ролью 'Admin'
+    $post = Post::where('name', 'Accountant')->first();
+
+    if (!$post) {
+        return response()->json(['error' => 'Пост с указанной ролью не найден.'], 404);
+    }
+
+    // Начинаем запрос для получения работников
+    $query = Worker::with('user') // Предполагается, что в модели Worker есть связь с моделью User
+        ->where('post_id', $post->id);
+
+    // Фильтруем по имени пользователя, если оно указано
+    if ($name) {
+        $query->whereHas('user', function ($q) use ($name) {
+            $q->where('name', 'like', "%$name%");
+        });
+    }
+
+    // Получаем работников
+    $admins = $query->get();
+
+    // Преобразуем данные для ответа
+    $adminsData = $admins->map(function ($worker) {
+        // Рассчитываем опыт работы в годах
+        $workExperience = $worker->adopted_at ? Carbon::parse($worker->adopted_at)->diffInYears(Carbon::now()) : null;
+
+        return [
+            'worker_id' => $worker->id,
+            'work_experience' => $workExperience, // Используем рассчитанный опыт работы
+            'adopted_at' => $worker->adopted_at, 
+            'user_id' => $worker->user_id,
+            'user_name' => $worker->user ? $worker->user->name : null, // Получаем имя пользователя
+            'user_email' => $worker->user ? $worker->user->email : null, // Получаем email пользователя
+            'user_phone' => $worker->user ? $worker->user->phone : null, // Получаем phone пользователя
+            'user_birthday' => $worker->user ? $worker->user->birthday : null, // Получаем birthday пользователя
+            'user_login' => $worker->user ? $worker->user->login : null, // Получаем login пользователя
+            'user_city' => $worker->user ? $worker->user->city : null, // Получаем city пользователя
+        ];
+    });
+
+    return $this->successResponse(
+        $this->paginate(
+            $adminsData->toArray()
+        )
+    );
+}
+
 // 4. Получение всех работников с ролью Barber
 public function getBarbers(Request $request)
 {

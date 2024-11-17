@@ -14,6 +14,7 @@ class PostSeeder extends Seeder
             ['name' => 'Barber'],
             ['name' => 'Staff'],
             ['name' => 'Undefined'],
+            ['name' => 'Accountant']
         ];
 
         DB::table('posts')->insert($posts);

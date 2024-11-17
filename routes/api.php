@@ -67,6 +67,7 @@ Route::get('/get_workers',[WorkerController::class,'index']);
 Route::get('/get_worker_barber',[WorkerController::class,'getBarbers']);
 Route::get('/get_worker_barber_for_mainPage',[WorkerController::class,'getBarbersForMainPage']);
 Route::get('/get_worker_admin',[WorkerController::class,'getAdmins']);
+Route::get('/get_worker_accountant',[WorkerController::class,'getAccountants']);
 Route::get('/get_worker_undefined',[WorkerController::class,'getUndefined']);
 Route::get('/get_worker_staff',[WorkerController::class,'getStaff']);
 Route::get('/get_worker/{id}',[WorkerController::class,'show']);

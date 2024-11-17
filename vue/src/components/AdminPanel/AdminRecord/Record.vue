@@ -64,11 +64,18 @@
                 <p><strong>Итоговая стоимость:</strong> {{ String(modalData.total_price) }}</p>
                 <p><strong>Дата:</strong> {{ modalData.date }}</p>
                 <p><strong>Время:</strong> {{ modalData.time }}</p>
+                <p><strong>Заказ выполнен:</strong> {{ modalData.is_finished === null || modalData.is_finished === '' || modalData.is_finished === false ? 'нет' : 'да' }}</p>
                 <p><strong>Услуги:</strong></p>
                 <ul>
                     <li v-for="service in modalData.services" :key="service">{{ service }}</li>
                 </ul>
-                <button @click="isModalVisible = false" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Закрыть</button>
+                <div class="flex gap-5">
+                    <button @click="isModalVisible = false" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Закрыть</button>
+                <button v-if="!modalData.is_finished" @click="markAsFinished(modalData.id)" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+                    Добавить в выполненные
+                </button>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -86,6 +93,7 @@ const today = new Date();
 
 const isModalVisible = ref(false);
 const modalData = ref({
+    id: '',
     status: '',
     barber: '',
     total_price: '',
@@ -93,6 +101,7 @@ const modalData = ref({
     time: '',
     user_name:'',
     user_phone:'',
+    is_finished: '',
     services: []
 });
 
@@ -211,9 +220,10 @@ const getTimeStatus = (record) => {
 
 const showModal = (record) => {
     if (!record) return;
-    console.log(record.total_price)
+    console.log(record.is_finished)
 
     modalData.value = {
+        id: record.id,
         status: getTimeStatus(record),
         barber: record.worker_name,
         total_prcie: record.total_price,
@@ -221,10 +231,16 @@ const showModal = (record) => {
         time: record.time,
         user_name: record.user_name,
         user_phone: record.user_phone,
-        services: record.services
+        services: record.services,
+        is_finished: record.is_finished
     };
     if(!modalData.value.total_price) {
         modalData.value.total_price  = record.total_price;
+    }
+
+    if(!modalData.value.is_finished) {
+        console.log(modalData.is_finished);
+        modalData.value.is_finished  = '';
     }
 
     isModalVisible.value = true;
@@ -233,6 +249,24 @@ const showModal = (record) => {
 const formatDate = (date) => {
     return date.toLocaleDateString();
 };
+
+const markAsFinished = async (recordId) => {
+    try {
+        const response = await axios.post(`/api/records_finished/${recordId}`, {
+            is_finished: 1
+        });
+        console.log('Запись обновлена:', response.data);
+        
+        // Обновляем состояние модальных данных
+        modalData.is_finished = 1; // Обновляем локальное состояние
+
+        // Закрываем модальное окно
+        isModalVisible.value = false; 
+        fetchSchedule();
+    } catch (error) {
+        console.error('Ошибка при обновлении записи:', error);
+    }
+}
 
 onMounted(fetchSchedule);
 </script>

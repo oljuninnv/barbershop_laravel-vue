@@ -201,6 +201,7 @@ class RecordController extends Controller
                     'user_phone' => $record->user_phone,
                     'user_email' => $record->user_email,
                     'created_at' => $record->created_at,
+                    'is_finished' => $record->is_finished,
                     'updated_at' => $record->updated_at,
                     'total_price' => $totalPrice, // Итоговая стоимость
                     'services' => $record->recordServices->map(function ($recordService) {
@@ -348,4 +349,27 @@ class RecordController extends Controller
 
         return response()->json($availableRecords);
     }
+
+    public function finished(Request $request, $id)
+{
+    try {
+        // Находим запись по ID
+        $record = Record::findOrFail($id);
+
+        // Получаем значение is_finished из запроса
+        $isFinished = $request->input('is_finished');
+
+        // Прямое присвоение значения is_finished
+        $record->is_finished = $isFinished;
+
+        // Сохраняем изменения в базе данных
+        $record->save();
+
+        return response()->json($record);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return response()->json(['error' => 'Запись не найдена.'], 404);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Произошла ошибка при обновлении записи: ' . $e->getMessage()], 500);
+    }
+}
 }

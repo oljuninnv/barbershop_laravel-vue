@@ -82,6 +82,7 @@ Route::put('/records_update/{id}', [RecordController::class,'update']); // Ре�
 Route::post('/records_finished/{id}', [RecordController::class,'finished']); // Редактирование записи
 Route::get('/records/{id}', [RecordController::class,'show']); // Получение записи по id
 Route::delete('/records/{id}', [RecordController::class,'destroy']); // Удаление записи
+Route::delete('/del_user_records/{id}', [RecordController::class, 'deleteUserFieldsById']);
 Route::get('/records', [RecordController::class,'index']); // Получение всех записей
 Route::get('/barber_records/{id}', [RecordController::class,'BarberRecords']); // Получение всех записей барбера
 Route::get('/visitors_records/{id}', [RecordController::class,'VisitorRecords']); // Получение всех записей пользователя

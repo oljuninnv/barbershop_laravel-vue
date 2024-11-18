@@ -4,11 +4,13 @@
             <h2 class="text-[26px]">Выберите барбера:</h2>
             <select id="barberSelect" class="flex-1" v-model="selectedBarber" @change="fetchSchedule">
                 <option value="" disabled selected>Выберите барбера</option>
-                <option v-for="barber in barbers" :key="barber.worker_id" :value="barber.worker_id">{{ barber.name }}</option>
+                <option v-for="barber in barbers" :key="barber.worker_id" :value="barber.worker_id">{{ barber.name }}
+                </option>
             </select>
         </div>
 
-        <h3 class="text-lg font-bold mb-4">Расписание на текущую неделю (с {{ formatDate(currentWeekStart) }} по {{ formatDate(currentWeekEnd) }})</h3>
+        <h3 class="text-lg font-bold mb-4">Расписание на текущую неделю (с {{ formatDate(currentWeekStart) }} по {{
+            formatDate(currentWeekEnd) }})</h3>
         <div class="overflow-y-auto max-h-60 mb-4">
             <table class="w-full border-collapse">
                 <thead>
@@ -20,9 +22,14 @@
                 <tbody>
                     <tr v-for="time in times" :key="time">
                         <td class="border-b p-2">{{ time }}</td>
-                        <td v-for="day in days" :key="day" class="border-b p-2" @click="showModal(currentWeekSchedule[day]?.[time])">
-                            <span v-if="getTimeStatus(currentWeekSchedule[day]?.[time]) == 'Занято'" class="text-red-500 cursor-pointer">{{ getTimeStatus(currentWeekSchedule[day]?.[time]) }}</span>
-                            <span v-if="getTimeStatus(currentWeekSchedule[day]?.[time]) == 'Свободно'" class="text-green-500 cursor-pointer">{{ getTimeStatus(currentWeekSchedule[day]?.[time]) }}</span>
+                        <td v-for="day in days" :key="day" class="border-b p-2"
+                            @click="showModal(currentWeekSchedule[day]?.[time])">
+                            <span v-if="getTimeStatus(currentWeekSchedule[day]?.[time]) == 'Занято'"
+                                class="text-red-500 cursor-pointer">{{ getTimeStatus(currentWeekSchedule[day]?.[time])
+                                }}</span>
+                            <span v-if="getTimeStatus(currentWeekSchedule[day]?.[time]) == 'Свободно'"
+                                class="text-green-500 cursor-pointer">{{ getTimeStatus(currentWeekSchedule[day]?.[time])
+                                }}</span>
                             <span v-else> </span>
                         </td>
                     </tr>
@@ -43,9 +50,14 @@
                 <tbody>
                     <tr v-for="time in times" :key="time">
                         <td class="border-b p-2">{{ time }}</td>
-                        <td v-for="day in days" :key="day" class="border-b p-2" @click="showModal(nextWeekSchedule[day]?.[time])">
-                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) === 'Занято'" class="text-red-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time]) }} </span>
-                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) === 'Свободно'" class="text-green-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time]) }}</span>
+                        <td v-for="day in days" :key="day" class="border-b p-2"
+                            @click="showModal(nextWeekSchedule[day]?.[time])">
+                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) === 'Занято'"
+                                class="text-red-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time]) }}
+                            </span>
+                            <span v-if="getTimeStatus(nextWeekSchedule[day]?.[time]) === 'Свободно'"
+                                class="text-green-500 cursor-pointer">{{ getTimeStatus(nextWeekSchedule[day]?.[time])
+                                }}</span>
                             <span v-else class="text-gray-500"> </span>
                         </td>
                     </tr>
@@ -64,23 +76,29 @@
                 <p><strong>Итоговая стоимость:</strong> {{ String(modalData.total_price) }}</p>
                 <p><strong>Дата:</strong> {{ modalData.date }}</p>
                 <p><strong>Время:</strong> {{ modalData.time }}</p>
-                <p><strong>Заказ выполнен:</strong> {{ modalData.is_finished === null || modalData.is_finished === '' || modalData.is_finished === false ? 'нет' : 'да' }}</p>
+                <p><strong>Заказ выполнен:</strong> {{ modalData.is_finished === null || modalData.is_finished === '' ||
+                    modalData.is_finished === false ? 'нет' : 'да' }}</p>
                 <p><strong>Услуги:</strong></p>
                 <ul>
                     <li v-for="service in modalData.services" :key="service">{{ service }}</li>
                 </ul>
-                <div class="flex gap-5">
-                    <button @click="isModalVisible = false" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Закрыть</button>
-                <button v-if="!modalData.is_finished" @click="markAsFinished(modalData)" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-                    Добавить в выполненные
-                </button>
-                </div>
                 <div class="flex gap-5 mt-2">
                     <button @click="deleteRecord(modalData.id)" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
                         Удалить запись
                     </button>
+                    <button v-if="modalData.user_name !== null" @click="deleteUserFromRecord(modalData.id)"
+                        class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+                        Удалить пользователя из записи
+                    </button>
                 </div>
-                
+                <div class="flex gap-5 mt-2">
+                    <button @click="isModalVisible = false"
+                        class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Закрыть</button>
+                    <button v-if="!modalData.is_finished" @click="markAsFinished(modalData)"
+                        class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+                        Добавить в выполненные
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -104,8 +122,8 @@ const modalData = ref({
     total_price: '',
     date: '',
     time: '',
-    user_name:'',
-    user_phone:'',
+    user_name: '',
+    user_phone: '',
     is_finished: '',
     services: []
 });
@@ -189,7 +207,7 @@ const fetchSchedule = async () => {
                 console.log(currentWeekSchedule.value[day][time]);
             } else if (isNextWeek(recordDate)) {
                 console.log(recordDate);
-                
+
                 nextWeekSchedule.value[day] = nextWeekSchedule.value[day] || {};
                 nextWeekSchedule.value[day][time] = record;
                 console.log(nextWeekSchedule.value[day][time]);
@@ -216,11 +234,11 @@ const getTimeStatus = (record) => {
     if (record && (record.user_name || record.user_id)) {
         return 'Занято';
     } else if (record && (!record.user_name || !record.user_id)) {
-    return 'Свободно';
-  }
-  else {
-    return '';
-  }
+        return 'Свободно';
+    }
+    else {
+        return '';
+    }
 };
 
 const showModal = (record) => {
@@ -239,13 +257,13 @@ const showModal = (record) => {
         services: record.services,
         is_finished: record.is_finished
     };
-    if(!modalData.value.total_price) {
-        modalData.value.total_price  = record.total_price;
+    if (!modalData.value.total_price) {
+        modalData.value.total_price = record.total_price;
     }
 
-    if(!modalData.value.is_finished) {
+    if (!modalData.value.is_finished) {
         console.log(modalData.is_finished);
-        modalData.value.is_finished  = '';
+        modalData.value.is_finished = '';
     }
 
     isModalVisible.value = true;
@@ -274,12 +292,12 @@ const markAsFinished = async (record) => {
             is_finished: 1
         });
         console.log('Запись обновлена:', response.data);
-        
+
         // Обновляем состояние модальных данных
         modalData.is_finished = 1; // Обновляем локальное состояние
 
         // Закрываем модальное окно
-        isModalVisible.value = false; 
+        isModalVisible.value = false;
         fetchSchedule();
     } catch (error) {
         console.error('Ошибка при обновлении записи:', error);
@@ -287,18 +305,33 @@ const markAsFinished = async (record) => {
 }
 
 const deleteRecord = (id) => {
-  if (confirm('Вы уверены, что хотите удалить эту запись?')) {
-    axios.delete(`api/records/${id}`)
-      .then(response => {
-        console.log(response.data.message);
-        isModalVisible.value = false; // Закрываем модальное окно
-        fetchSchedule();
-      })
-      .catch(error => {
-        console.error('Ошибка при удалении записи:', error.response.data.error);
-        alert('Ошибка при удалении записи: ' + error.response.data.error);
-      });
-  }
+    if (confirm('Вы уверены, что хотите удалить эту запись?')) {
+        axios.delete(`api/records/${id}`)
+            .then(response => {
+                console.log(response.data.message);
+                isModalVisible.value = false; // Закрываем модальное окно
+                fetchSchedule();
+            })
+            .catch(error => {
+                console.error('Ошибка при удалении записи:', error.response.data.error);
+                alert('Ошибка при удалении записи: ' + error.response.data.error);
+            });
+    }
+};
+
+const deleteUserFromRecord = (id) => {
+    if (confirm('Вы уверены, что хотите удалить пользователя из записи?')) {
+        axios.delete(`api/del_user_records/${id}`)
+            .then(response => {
+                console.log(response.data.message);
+                isModalVisible.value = false; // Закрываем модальное окно
+                fetchSchedule();
+            })
+            .catch(error => {
+                console.error('Ошибка при удалении пользователя из записи:', error.response.data.error);
+                alert('Ошибка при удалении пользователя: ' + error.response.data.error);
+            });
+    }
 };
 
 onMounted(fetchSchedule);

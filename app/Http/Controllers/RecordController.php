@@ -130,21 +130,41 @@ class RecordController extends Controller
 
     // 4. Удаление записи +
     public function destroy($id)
-{
-    // Находим запись по ID
-    $record = Record::find($id);
-    if (!$record) {
-        return response()->json(['error' => 'Запись не найдена.'], 404);
+    {
+        // Находим запись по ID
+        $record = Record::find($id);
+        if (!$record) {
+            return response()->json(['error' => 'Запись не найдена.'], 404);
+        }
+
+        // Удаляем связанные записи из таблицы record_services
+        $record->recordServices()->delete(); // Предполагается, что связь определена в модели Record
+
+        // Удаляем основную запись
+        $record->delete();
+
+        return response()->json(['message' => 'Запись успешно удалена.']);
     }
 
-    // Удаляем связанные записи из таблицы record_services
-    $record->recordServices()->delete(); // Предполагается, что связь определена в модели Record
+    public function deleteUserFieldsById($id): JsonResponse
+    {
+        // Находим запись по ID
+        $record = Record::find($id);
+        if (!$record) {
+            return response()->json(['error' => 'Запись не найдена.'], 404);
+        }
 
-    // Удаляем основную запись
-    $record->delete();
+        // Удаляем только указанные поля
+        $record->user_id = null;
+        $record->user_name = null;
+        $record->user_email = null;
+        $record->user_phone = null;
 
-    return response()->json(['message' => 'Запись успешно удалена.']);
-}
+        // Сохраняем изменения
+        $record->save();
+
+        return response()->json(['message' => 'Пользовательские поля успешно удалены.']);
+    }
 
     // 5. Получение всех записей +
     public function index()

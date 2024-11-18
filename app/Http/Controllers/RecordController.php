@@ -249,6 +249,7 @@ class RecordController extends Controller
                     'id' => $record->id,
                     'date' => $record->date,
                     'time' => $record->time,
+                    'is_finished' => $record->is_finished,
                     'worker_name' => $record->worker->user->name ?? 'Неизвестный работник', // Имя работника
                     'services' => $record->recordServices->map(function ($recordService) {
                         return [

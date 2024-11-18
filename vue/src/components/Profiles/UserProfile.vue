@@ -147,10 +147,11 @@ const filteredAppointments = computed(() => {
   const today = new Date().toISOString().split('T')[0]; // Получаем сегодняшнюю дату в формате YYYY-MM-DD
 
   if (Array.isArray(appointments.value)) {
-    return appointments.value.filter(appointment => 
-      (activeRecordTab.value === 'active' && appointment.date >= today) || 
-      (activeRecordTab.value === 'inactive' && appointment.date < today)
-    );
+    return appointments.value.filter(appointment => {
+      const isFinishedFalse = appointment.is_finished === 0;
+      return (activeRecordTab.value === 'active' && (appointment.date >= today || isFinishedFalse)) || 
+             (activeRecordTab.value === 'inactive' && appointment.date < today);
+    });
   } else {
     return []; // Если appointments не массив, возвращаем пустой массив
   }

@@ -71,7 +71,7 @@
                 </ul>
                 <div class="flex gap-5">
                     <button @click="isModalVisible = false" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Закрыть</button>
-                <button v-if="!modalData.is_finished" @click="markAsFinished(modalData.id)" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+                <button v-if="!modalData.is_finished" @click="markAsFinished(modalData)" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
                     Добавить в выполненные
                 </button>
                 </div>
@@ -250,9 +250,22 @@ const formatDate = (date) => {
     return date.toLocaleDateString();
 };
 
-const markAsFinished = async (recordId) => {
+const markAsFinished = async (record) => {
+    console.log(record);
+
+    // Создаем объект Date из даты и времени
+    const appointmentDateTime = new Date(`${record.date}T${record.time}`); // Формат YYYY-MM-DDTHH:mm:ss
+    const currentDateTime = new Date(); // Получаем текущее время
+
+    // Проверяем, что дата и время записи больше или равны текущему времени
+    if (appointmentDateTime > currentDateTime) {
+        alert('Нельзя завершать будущие заказы!'); // Выводим сообщение об ошибке
+        return; // Прерываем выполнение метода
+    }
+    console.log(currentDateTime);
+
     try {
-        const response = await axios.post(`/api/records_finished/${recordId}`, {
+        const response = await axios.post(`/api/records_finished/${record.id}`, {
             is_finished: 1
         });
         console.log('Запись обновлена:', response.data);

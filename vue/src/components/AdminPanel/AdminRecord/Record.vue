@@ -75,6 +75,11 @@
                     Добавить в выполненные
                 </button>
                 </div>
+                <div class="flex gap-5 mt-2">
+                    <button @click="deleteRecord(modalData.id)" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+                        Удалить запись
+                    </button>
+                </div>
                 
             </div>
         </div>
@@ -280,6 +285,21 @@ const markAsFinished = async (record) => {
         console.error('Ошибка при обновлении записи:', error);
     }
 }
+
+const deleteRecord = (id) => {
+  if (confirm('Вы уверены, что хотите удалить эту запись?')) {
+    axios.delete(`api/records/${id}`)
+      .then(response => {
+        console.log(response.data.message);
+        isModalVisible.value = false; // Закрываем модальное окно
+        fetchSchedule();
+      })
+      .catch(error => {
+        console.error('Ошибка при удалении записи:', error.response.data.error);
+        alert('Ошибка при удалении записи: ' + error.response.data.error);
+      });
+  }
+};
 
 onMounted(fetchSchedule);
 </script>

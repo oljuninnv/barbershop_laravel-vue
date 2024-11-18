@@ -132,48 +132,51 @@ const toggleService = (service) => {
 };
 
 const fetchAvailableRecords = async (workerId) => {
-  console.log(workerId);
-  try {
-    const response = await axios.get('/api/available-records', {
-      params: {
-        date: selectedDate.value,
-        worker_id: selectedBarber.value,
-      }
-    });
-    
-    // Очищаем массив times перед обновлением
-    times.value = [];
-    records.value = response.data;
+    console.log(workerId);
+    try {
+        const response = await axios.get('/api/available-records', {
+            params: {
+                date: selectedDate.value,
+                worker_id: selectedBarber.value,
+            }
+        });
+        
+        // Очищаем массив times перед обновлением
+        times.value = [];
+        records.value = response.data;
 
-    // Получаем уникальные времена
-    const allTimes = [...new Set(response.data.map(element => element.time))];
+        // Получаем уникальные времена
+        const allTimes = [...new Set(response.data.map(element => element.time))];
 
-    // Получаем текущую дату
-    const currentDate = new Date();
-    const selectedDateObj = new Date(selectedDate.value);
+        // Получаем текущую дату и время
+        const currentDateTime = new Date();
 
-    // Фильтруем времена в зависимости от выбранной даты
-    if (selectedDateObj < currentDate) {
-      // Если выбрана прошедшая дата, не выводим время
-      times.value = []; // Очищаем времена
-    } else if (selectedDateObj.toDateString() === currentDate.toDateString()) {
-      // Если выбрана текущая дата, не выводим прошедшее время
-      times.value = allTimes.filter(time => {
-        const timeDate = new Date(`${selectedDate.value}T${time}`);
-        return timeDate >= currentDate; // Оставляем только будущие времена
-      });
-    } else {
-      // Если выбрана будущая дата, выводим все времена
-      times.value = allTimes;
+        // Получаем текущую дату без времени
+        const currentDate = new Date(new Date().setHours(0, 0, 0, 0));
+        const selectedDateObj = new Date(selectedDate.value);
+
+        // Фильтруем времена в зависимости от выбранной даты
+        if (selectedDateObj < currentDate) {
+            // Если выбрана прошедшая дата, не выводим время
+            times.value = []; // Очищаем времена
+        } else if (selectedDateObj.toDateString() === currentDate.toDateString()) {
+            // Если выбрана текущая дата, не выводим прошедшее время
+            times.value = allTimes.filter(time => {
+                const appointmentDateTime = new Date(`${selectedDate.value}T${time}`);
+                return appointmentDateTime >= currentDateTime; // Оставляем только будущие времена
+            });
+        } else {
+            // Если выбрана будущая дата, выводим все времена
+            times.value = allTimes;
+        }
+
+        times.value.sort(); // Сортируем доступные времена
+
+        takenTimes.value = []; // Очищаем занятые времена
+        selectedTime.value = null; // Сбрасываем выбранное время
+    } catch (error) {
+        console.error('Ошибка при загрузке доступных записей:', error);
     }
-
-    times.value.sort(); // Сортируем доступные времена
-
-    takenTimes.value = []; // Очищаем занятые времена
-    selectedTime.value = null; // Сбрасываем выбранное время
-  } catch (error) {
-    console.error('Ошибка при загрузке доступных записей:', error);
-  }
 }
 
 watch([() => selectedBarber.value, () => selectedDate.value], () => {

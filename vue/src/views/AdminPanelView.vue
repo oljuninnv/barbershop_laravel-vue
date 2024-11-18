@@ -97,6 +97,13 @@
                 </li>
                 <hr>
                 <li>
+                    <a href="#" @click.prevent="showTable('register_records')"
+                        class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                        <span>Записать на приём</span>
+                    </a>
+                </li>
+                <hr>
+                <li>
                     <a href="#"
                         class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
                         <router-link to="/departments" class="flex gap-2">
@@ -128,6 +135,7 @@
                 <Undefined v-if="activeTable === 'undefined_worker'"/>
                 <Staff v-if="activeTable === 'staff'"/>
                 <Accountant v-if="activeTable === 'accountant'"/>
+                <RegisterRecords v-if="activeTable === 'register_records'" />
             </div>
         </div>
     </div>
@@ -152,6 +160,7 @@ import { ref, computed } from 'vue';
   import Undefined from "./../components/AdminPanel/AdminWorkers/Undefined.vue";
   import Staff from "./../components/AdminPanel/AdminWorkers/Staff.vue";
   import Accountant from "./../components/AdminPanel/AdminWorkers/Accountant.vue";
+  import RegisterRecords from "./../components/AdminPanel/AdminRecord/Register_record.vue";
 
 const activeTable = ref('');
 

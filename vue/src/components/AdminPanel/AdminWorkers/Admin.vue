@@ -76,7 +76,7 @@
                     <div class="flex flex-col gap-2">
                         <label for="positions">Должности:</label>
                         <select id="positions" v-model="modalUser.post_id" class="input_text">
-                            <option v-for="post in posts" :key="post.id" :value="post.id">{{ post.name }}</option>
+                          <option v-for="post in posts" :key="post.id" :value="post.id">{{ post.name }}</option>
                         </select>
                     </div>
                 </div>

@@ -66,7 +66,7 @@
         <!-- Модальное окно -->
         <div v-if="showModal" class="modal-overlay">
           <div class="modal-content text-center text-[20px]">
-            <h2 class="mb-5">Введите ваши данные</h2>
+            <h2 class="mb-5">Введите данные пользователя</h2>
             <div class="flex flex-col gap-5">
               <input class="input_text" type="text" placeholder="Имя" v-model="userName" />
               <input class="input_text" type="email" placeholder="Почта" v-model="userEmail" />

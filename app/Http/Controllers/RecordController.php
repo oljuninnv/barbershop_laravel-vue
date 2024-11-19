@@ -35,6 +35,7 @@ class RecordController extends Controller
                 $data['user_phone'] = $user->phone;
                 $data['user_email'] = $user->email;
             }
+            $data['is_finished'] = 0;
         }
 
         // Создаем запись
